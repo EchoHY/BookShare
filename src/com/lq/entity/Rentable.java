@@ -1,15 +1,9 @@
 package com.lq.entity;
-
 import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
-
 @Entity
 @Table(name = "t_rentable")
 public class Rentable {
@@ -62,7 +56,7 @@ public class Rentable {
 	
 	//总收入：若此书是租用到期后等待下一个主人，则该字段从下表复制，否则为空。
 	@Column(length = 32)
-	private String income;
+	private BigDecimal income;
 
 	public String getIndex() {
 		return index;
@@ -152,11 +146,11 @@ public class Rentable {
 		this.rent_history = rent_history;
 	}
 
-	public String getIncome() {
+	public BigDecimal getIncome() {
 		return income;
 	}
 
-	public void setIncome(String income) {
+	public void setIncome(BigDecimal income) {
 		this.income = income;
 	}
 	
