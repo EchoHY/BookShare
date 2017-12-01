@@ -1,14 +1,11 @@
 package com.lq.entity;
-
 import javax.persistence.*;
-
-import org.hibernate.annotations.GenericGenerator;
-
 @Entity
 @Table(name = "t_user")
 public class User {
 
 	//用户的手机号：这是主键，充分利用了手机号不可重复的特点
+	@Id
 	@Column(length = 32)
 	private String tel;
 	

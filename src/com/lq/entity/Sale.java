@@ -1,16 +1,16 @@
 package com.lq.entity;
-
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
-
 @Entity
 @Table(name = "t_sale")
 public class Sale {
 
 	//序号：当书被卖出时，该书的记录从表一移动到此表，序号沿用原序号。
+	@Id
 	@Column(length = 32)
 	private String index;
 	

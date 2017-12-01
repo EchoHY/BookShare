@@ -24,7 +24,6 @@
         class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
 	<!-- 慎用,Controller没有处理得请求都会到这来 
 	<mvc:default-servlet-handler />
-	<mvc:default-servlet-handler />
 	-->
 		
     <!-- 静态资源(js/image)的访问 ，可添加多个-->

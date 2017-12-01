@@ -1,6 +1,6 @@
 package com.lq.controller;
-import java.io.IOException;
-import java.io.PrintWriter;
+//import java.io.IOException;
+//import java.io.PrintWriter;
 import java.math.BigDecimal;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +24,7 @@ public class RentableController{
 		private RentableService rentableService;
 		@RequestMapping("/bookregister")
 	    public void bookregister(boolean sellable,boolean borrowable,HttpServletRequest request,ServletResponse response,ModelMap map) {
+			
 			String index = "phoneNum"+FileUploadController.getCurrentDate()+FileUploadController.getCurrentTime().replaceAll(":", "：");
 			String name = request.getParameter("name");
 			String information = request.getParameter("information");
@@ -52,6 +53,39 @@ public class RentableController{
 			rentable.setRent_history(rent_history);
 			rentable.setIncome(income);
 			rentableService.addRentable(rentable);
+		}
+		@RequestMapping("/bookapplication")
+	    public void bookput(int number,HttpServletRequest request,ServletResponse response,ModelMap map){
+			/*
+			 * Rentable rentable = new Rentable();
+			 * String index = "phoneNum"+FileUploadController.getCurrentDate()+FileUploadController.getCurrentTime().replaceAll(":", "：");
+			String name = request.getParameter("name");
+			String information = request.getParameter("information");
+			String rent_price = request.getParameter("rent_price");
+			String sale_price = request.getParameter("sale_price");
+			String former_tel = request.getParameter("former_tel");
+			String now_tel ="";
+			String start_time = "";
+			String way;
+			if(sellable == true && borrowable == true )	way = "sell_borrowable";
+			else if(sellable == true && borrowable == false )	way = "sellable";
+			else if(sellable == false && borrowable == true )	way = "borrowable";
+			else 	way = "noneable";
+			
+			String rent_history = "";
+			BigDecimal income = new BigDecimal("0").setScale(1,BigDecimal.ROUND_HALF_UP);
+			Rentable rentable = new Rentable();
+			rentable.setIndex(index);
+			rentable.setName(name);
+			rentable.setInformation(information);
+			rentable.setRent_price(new BigDecimal(rent_price).setScale(1, BigDecimal.ROUND_HALF_UP));
+			rentable.setSale_price(new BigDecimal(sale_price).setScale(1, BigDecimal.ROUND_HALF_UP));
+			rentable.setFormer_tel(former_tel);
+			rentable.setNow_tel(now_tel);
+			rentable.setStart_time(start_time);
+			rentable.setWay(way);
+			rentable.setRent_history(rent_history);
+			rentable.setIncome(income);*/
 		}
 }			
 //List<MyUser> myUsers = myUserService.getAllMyUser();

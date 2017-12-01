@@ -12,4 +12,9 @@ public class RentableServiceImpl implements RentableService{
 		// TODO Auto-generated method stub
 		rentableDao.addRentable(rentable);
 	}
+	@Override
+	public boolean delRentable(String index) {
+		// TODO Auto-generated method stub
+		return rentableDao.delRentable(index);
+	}
 }

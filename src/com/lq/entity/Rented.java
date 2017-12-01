@@ -1,16 +1,16 @@
 package com.lq.entity;
-
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
-
 @Entity
 @Table(name = "t_rented")
 public class Rented {
 
 	//序号：当书被租出时，该书的记录从上表移动到此表，序号沿用原序号。当书被报废时，所在记录从此表移到下表，序号依然沿用。
+	@Id
 	@Column(length = 32)
 	private String index;
 	
