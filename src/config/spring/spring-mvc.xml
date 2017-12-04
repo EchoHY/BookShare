@@ -27,20 +27,13 @@
 	-->
 		
     <!-- 静态资源(js/image)的访问 ，可添加多个-->
+    <!--  
     <mvc:resources location="/js/" mapping="/js/**" />
     <mvc:resources location="/image_Login/" mapping="/image_Login/**"/>
     <mvc:resources location="/image_Travel/" mapping="/image_Travel/**"/>
     <mvc:resources location="/image_Youth/" mapping="/image_Youth/**"/>
-    <mvc:resources location="/img/" mapping="/img/**"/>
     <mvc:resources location="/css/" mapping="/css/**"/>
-    <mvc:resources location="/fonts/" mapping="/fonts/**"/>
-    <mvc:resources location="/travelNotes/travelNote/" mapping="/travelNotes/travelNote/*.html"/>
-    <mvc:resources location="/" mapping="/*.html"/>
-    <mvc:resources location="/perInfo/personal/" mapping="/perInfo/personal/*.html"/>
-    <mvc:resources location="/perInfo/personal/going/" mapping="/perInfo/personal/going/*.html"/>
-    <mvc:resources location="/perInfo/personal/historyJourney/" mapping="/perInfo/personal/historyJourney/*.html"/>
-    <mvc:resources location="/perInfo/personal/JourneyDiary/" mapping="/perInfo/personal/JourneyDiary/*.html"/>
-
+    -->
 	<!-- 定义拦截器 -->
 	<mvc:interceptors>
 		<mvc:interceptor>
@@ -56,11 +49,11 @@
         <property name="suffix" value=".jsp"></property>
     </bean>
     <!-- 处理文件上传 -->
-    <bean id="multipartResolver"
+    <!-- <bean id="multipartResolver"
     	class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
     	<property name = "defaultEncoding" value = "gbk"></property>
     	<property name = "maxInMemorySize" value = "10240"></property>
     	<property name = "uploadTempDir"   value = "/upload/"></property>
     	<property name = "maxUploadSize"   value = "-1"></property>
-    </bean>
+    </bean> -->
 </beans>  

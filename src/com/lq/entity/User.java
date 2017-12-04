@@ -7,7 +7,7 @@ public class User {
 	//用户的手机号：这是主键，充分利用了手机号不可重复的特点
 	@Id
 	@Column(length = 32)
-	private String tel;
+	private String id;
 	
 	//昵称或姓名：用户可以设置也可以不设置。
 	@Column(length = 32)
@@ -21,12 +21,12 @@ public class User {
 	@Column(length = 32)
 	private String sex;
 
-	public String getTel() {
-		return tel;
+	public String getId() {
+		return id;
 	}
 
-	public void setTel(String tel) {
-		this.tel = tel;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getUsername() {

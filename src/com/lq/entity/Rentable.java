@@ -11,7 +11,7 @@ public class Rentable {
 	//序号：作为表的主键，结构是：原主人手机号+原主人首次提交信息的年月日时分秒，如1871122334420171231120000
 	@Id
 	@Column(length = 32)
-	private String index;
+	private String id;
 	
 	//书名：由书的原主人提交信息时输入或从下表复制
 	@Column(length = 32)
@@ -58,12 +58,12 @@ public class Rentable {
 	@Column(length = 32)
 	private BigDecimal income;
 
-	public String getIndex() {
-		return index;
+	public String getId() {
+		return id;
 	}
 
-	public void setIndex(String index) {
-		this.index = index;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getName() {

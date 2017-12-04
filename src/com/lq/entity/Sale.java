@@ -12,7 +12,7 @@ public class Sale {
 	//序号：当书被卖出时，该书的记录从表一移动到此表，序号沿用原序号。
 	@Id
 	@Column(length = 32)
-	private String index;
+	private String id;
 	
 	//书名：从表一复制
 	@Column(length = 32)
@@ -40,13 +40,12 @@ public class Sale {
 	private BigDecimal sale_price;
 
 
-	public String getIndex() {
-		return index;
+	public String getId() {
+		return id;
 	}
 
-
-	public void setIndex(String index) {
-		this.index = index;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 

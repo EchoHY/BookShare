@@ -8,11 +8,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "t_rented")
 public class Rented {
-
 	//序号：当书被租出时，该书的记录从上表移动到此表，序号沿用原序号。当书被报废时，所在记录从此表移到下表，序号依然沿用。
 	@Id
 	@Column(length = 32)
-	private String index;
+	private String id;
 	
 	//书名：从上表复制
 	@Column(length = 32)
@@ -25,7 +24,6 @@ public class Rented {
 	//书的信息:从上表复制
 	@Column(length = 32)
 	private String information;
-
 
 	//原主人（的手机号）:从上表复制
 	@Column(length = 32)
@@ -55,12 +53,12 @@ public class Rented {
 	@Column(length = 32)
 	private BigDecimal rent_price;
 
-	public String getIndex() {
-		return index;
+	public String getId() {
+		return id;
 	}
 
-	public void setIndex(String index) {
-		this.index = index;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getName() {

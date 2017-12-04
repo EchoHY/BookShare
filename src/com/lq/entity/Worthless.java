@@ -12,7 +12,7 @@ public class Worthless {
 	//序号：当书被报废时，所在记录从上表移到此表，序号依然沿用。
 	@Id
 	@Column(length = 32)
-	private String index;
+	private String id;
 	
 	//书名：从表一复制
 	@Column(length = 32)
@@ -47,12 +47,12 @@ public class Worthless {
 	@Column(length = 32)
 	private BigDecimal income;
 
-	public String getIndex() {
-		return index;
+	public String getId() {
+		return id;
 	}
 
-	public void setIndex(String index) {
-		this.index = index;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getName() {
