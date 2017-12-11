@@ -1,6 +1,9 @@
 package com.lq.service;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.lq.entity.Rentable;
 import com.lq.dao.RentableDao;
 @Service
@@ -13,8 +16,18 @@ public class RentableServiceImpl implements RentableService{
 		rentableDao.addRentable(rentable);
 	}
 	@Override
-	public boolean delRentable(String index) {
+	public boolean delRentable(int index) {
 		// TODO Auto-generated method stub
 		return rentableDao.delRentable(index);
+	}
+	@Override
+	public boolean updateRentable(int id,String picture) {
+		// TODO Auto-generated method stub
+		return rentableDao.updateRentable(id,picture);
+	}
+	@Override
+	public List<Rentable> getRentables(int startlocation, int size) {
+		// TODO Auto-generated method stub
+		return rentableDao.getRentables(startlocation, size);
 	}
 }

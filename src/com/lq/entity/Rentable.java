@@ -2,24 +2,34 @@ package com.lq.entity;
 import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 @Entity
 @Table(name = "t_rentable")
 public class Rentable {
 
 	//序号：作为表的主键，结构是：原主人手机号+原主人首次提交信息的年月日时分秒，如1871122334420171231120000
 	@Id
+	@GeneratedValue(strategy=GenerationType.TABLE,generator="tableGenerator")
+	@TableGenerator(name="tableGenerator",initialValue=0,allocationSize=1)
 	@Column(length = 32)
-	private String id;
+	private int id;
 	
 	//书名：由书的原主人提交信息时输入或从下表复制
 	@Column(length = 32)
 	private String name;
 	
 	//书的图片:由书的原主人提交信息时输入或从下表复制
-	@Column(length = 32)
+	@Column(length = 64)
 	private String picture;
+	
+	//书的图片:由书的原主人提交信息时输入或从下表复制
+	@Column(length = 64)
+	private String picturesec;
+	
 	
 	//书的信息:由书的原主人提交信息时拍摄书的条码上传或从下表复制
 	@Column(length = 32)
@@ -58,11 +68,11 @@ public class Rentable {
 	@Column(length = 32)
 	private BigDecimal income;
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -154,4 +164,12 @@ public class Rentable {
 		this.income = income;
 	}
 	
+	public String getPicturesec() {
+		return picturesec;
+	}
+
+	public void setPicturesec(String picturesec) {
+		this.picturesec = picturesec;
+	}
+
 }

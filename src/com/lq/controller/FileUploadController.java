@@ -3,6 +3,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,26 +14,33 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.ServletContextAware;
+
+import com.lq.service.RentableService;
 @Controller
 @RequestMapping("/upload")
 public class FileUploadController implements ServletContextAware{
 	private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
+	@Autowired
+	private RentableService rentableService;
 	private ServletContext servletContext;
 	@Override
 	public void setServletContext(ServletContext context){
 		this.servletContext = context;
 	}
 	@RequestMapping(value = "image", method = RequestMethod.POST)
-	public void uploadDiagFile(HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public void uploadDiagFile(HttpServletRequest request,HttpServletResponse response) throws IOException, InterruptedException {
 		request.setCharacterEncoding("utf-8");
 		FileItem picture = null;
 		DiskFileItemFactory factory = null;
@@ -72,9 +80,12 @@ public class FileUploadController implements ServletContextAware{
 			}
 			String onlycode = (String)request.getAttribute("onlycode");
 			String num = (String)request.getAttribute("imagename");
-			System.out.println(onlycode+"  "+num);
 			String filetype = ".jpg";
-			String fileName = "wxid"+onlycode +filetype;
+			String fileName = "wxid"+num+onlycode +filetype;
+			String picPath = path+"\\"+fileName;
+			System.out.println(picPath);
+			//rentableService.updateRentable(onlycode,picPath);
+			
 			//真正写到磁盘上
 			File file = new File(path,fileName);
 			OutputStream out = new FileOutputStream(file);
