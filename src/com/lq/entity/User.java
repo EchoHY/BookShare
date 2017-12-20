@@ -4,23 +4,14 @@ import javax.persistence.*;
 @Table(name = "t_user")
 public class User {
 
-	//用户的手机号：这是主键，充分利用了手机号不可重复的特点
+	//用户的wx账号：这是主键，充分利用了OPENID不可重复的特点
 	@Id
 	@Column(length = 32)
 	private String id;
 	
-	//昵称或姓名：用户可以设置也可以不设置。
 	@Column(length = 32)
-	private String username;
+	private String nickname;
 	
-	//用户年级:可以设置也可以不设置
-	@Column(length = 32)
-	private String grade;
-	
-	//用户性别:可以设置也可以不设置
-	@Column(length = 32)
-	private String sex;
-
 	public String getId() {
 		return id;
 	}
@@ -29,12 +20,20 @@ public class User {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public String getGrade() {
@@ -53,30 +52,13 @@ public class User {
 		this.sex = sex;
 	}
 
-	public String getOut_book() {
-		return out_book;
-	}
-
-	public void setOut_book(String out_book) {
-		this.out_book = out_book;
-	}
-
-	public String getIn_book() {
-		return in_book;
-	}
-
-	public void setIn_book(String in_book) {
-		this.in_book = in_book;
-	}
-
-	//已出手的书:采用子表存储，子表只有一个字段，即书的序号。此字段包括用户租出、卖出、报废、尚未租出或卖出的书。
 	@Column(length = 32)
-	private String out_book;
+	private String phone;
 	
-	//正持有的书:采用子表存储，子表只有一个字段，即书的序号。此字段包括用户正在租用的书、租用到期但还没有下家的书、买来的书。
 	@Column(length = 32)
-	private String in_book;
+	private String grade;
 	
+	@Column(length = 32)
+	private String sex;
 
-	
 }

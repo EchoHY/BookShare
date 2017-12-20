@@ -11,101 +11,95 @@ public class Sale {
 
 	//序号：当书被卖出时，该书的记录从表一移动到此表，序号沿用原序号。
 	@Id
-	@Column(length = 32)
-	private String id;
-	
-	//书名：从表一复制
-	@Column(length = 32)
-	private String name;
-	
-	//书的图片:从表一复制
+	private int id;	
+	//书的图片:第一次租借时，从上表复制。之后再变换主人时，由上一个主人拍照上传，这么做有利于体现书的新旧程度。
 	@Column(length = 32)
 	private String picture;
-	
-	//书的信息:从表一复制
+	//书的信息:从上表复制
 	@Column(length = 32)
 	private String information;
-
-	//原主人（的手机号）:从表一复制
+	//原主人（的手机号）:从上表复制
 	@Column(length = 32)
-	private String former_tel;
-	
-	//现主人（的手机号）:即买此书的人，交易达成时生成此信息。
+	private String origin_openid;
+	//上线时间:原主人将此书提交到平台上的时间
+	private long start_time;	
+	//原交易方式
+	private int way;
+	//原租价:从上表复制，设置次字段为的是，当首位买者反悔时，书目从此表移动到
+	//上表，不至于出现信息丢失的情况
 	@Column(length = 32)
-	private String now_tel;
-	
-	
-	//售价:从表一复制。
+	private BigDecimal rent_price;
+	//售价:从上表复制
 	@Column(length = 32)
 	private BigDecimal sale_price;
+	//交易是否确定
+	private int sureornot;
 
-
-	public String getId() {
+	public Sale(){}
+	public Sale(int id,String picture,String information,String origin,
+			String origin_openid,long start_time,int way,BigDecimal rent_price,BigDecimal sale_price){
+		this.id = id;
+		this.picture = picture;
+		this.information = information;
+		this.origin_openid = origin_openid;
+		this.start_time = start_time;
+		this.way = way;
+		this.rent_price = rent_price;
+		this.sale_price = sale_price;
+	}
+	public int getId() {
 		return id;
 	}
-
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
-
-
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
 	public String getPicture() {
 		return picture;
 	}
-
-
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}
-
-
 	public String getInformation() {
 		return information;
 	}
-
-
 	public void setInformation(String information) {
 		this.information = information;
 	}
-
-
-	public String getFormer_tel() {
-		return former_tel;
+	public String getOrigin_openid() {
+		return origin_openid;
 	}
-
-
-	public void setFormer_tel(String former_tel) {
-		this.former_tel = former_tel;
+	public void setOrigin_openid(String origin_openid) {
+		this.origin_openid = origin_openid;
 	}
-
-
-	public String getNow_tel() {
-		return now_tel;
+	public long getStart_time() {
+		return start_time;
 	}
-
-
-	public void setNow_tel(String now_tel) {
-		this.now_tel = now_tel;
+	public void setStart_time(long start_time) {
+		this.start_time = start_time;
 	}
-
-
+	public int getWay() {
+		return way;
+	}
+	public void setWay(int way) {
+		this.way = way;
+	}
+	public BigDecimal getRent_price() {
+		return rent_price;
+	}
+	public void setRent_price(BigDecimal rent_price) {
+		this.rent_price = rent_price;
+	}
 	public BigDecimal getSale_price() {
 		return sale_price;
 	}
-
-
 	public void setSale_price(BigDecimal sale_price) {
 		this.sale_price = sale_price;
+	}
+	public int getSureornot() {
+		return sureornot;
+	}
+	public void setSureornot(int sureornot) {
+		this.sureornot = sureornot;
 	}
 	
 	

@@ -1,6 +1,5 @@
 package com.lq.entity;
 import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,63 +9,52 @@ import javax.persistence.Table;
 public class Rented {
 	//序号：当书被租出时，该书的记录从上表移动到此表，序号沿用原序号。当书被报废时，所在记录从此表移到下表，序号依然沿用。
 	@Id
-	@Column(length = 32)
-	private String id;
-	
-	//书名：从上表复制
-	@Column(length = 32)
-	private String name;
-	
+	private int id;	
 	//书的图片:第一次租借时，从上表复制。之后再变换主人时，由上一个主人拍照上传，这么做有利于体现书的新旧程度。
 	@Column(length = 32)
 	private String picture;
-	
 	//书的信息:从上表复制
 	@Column(length = 32)
 	private String information;
-
 	//原主人（的手机号）:从上表复制
 	@Column(length = 32)
-	private String former_tel;
-	
-	//书的现持有者（的手机号）:即租得此书的人，每有一笔租借交易达成时更新此字段
-	@Column(length = 32)
-	private String now_tel;
-	
+	private String origin_openid;
 	//上线时间:原主人将此书提交到平台上的时间
-	@Column(length = 32)
-	private String start_time;
-	
-	//开始本次租用的时间:当前租用者开始本次租用的时间
-	@Column(length = 32)
-	private String begin_time;
-	
-	//预定租期:租用者在租用时设定的租用时长
-	@Column(length = 32)
-	private String way;
-	
-	//租借历史:存储这本书曾被谁租过，以子表形式存储。上一个字段只是当前租这本书的人，本字段是在他之前租这本书的人。这个信息暂定为仅原主人可见。
-	@Column(length = 32)
-	private String rent_history;
-	
+	private long start_time;	
+	//原交易方式
+	private int way;
 	//租价:从上表复制
 	@Column(length = 32)
 	private BigDecimal rent_price;
+	//原售价:设置次字段为的是，当首位买者反悔时，书目从此表移动到
+	//上表，不至于出现信息丢失的情况
+	@Column(length = 32)
+	private BigDecimal sale_price;
+	//开始本次租用的时间:当前租用者开始本次租用的时间
+	private long begin_time;
+	//预订租期，按租用者在租用时设定的租用时长计算得来的结束租用的时间（精确到“日”）
+	private long end_time;
+	//预订租期，按租用者在租用时设定的租用时长计算得来的结束租用的时间（精确到“日”）
+	private int sureornot;
 
-	public String getId() {
+	public Rented(){}
+	public Rented(int id,String picture,String information,String origin,
+			String origin_openid,long start_time,int way,BigDecimal rent_price,BigDecimal sale_price){
+		this.id = id;
+		this.picture = picture;
+		this.information = information;
+		this.origin_openid = origin_openid;
+		this.start_time = start_time;
+		this.way = way;
+		this.rent_price = rent_price;
+		this.sale_price = sale_price;
+	}
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getPicture() {
@@ -85,53 +73,51 @@ public class Rented {
 		this.information = information;
 	}
 
-	public String getFormer_tel() {
-		return former_tel;
+	public String getOrigin_openid() {
+		return origin_openid;
 	}
 
-	public void setFormer_tel(String former_tel) {
-		this.former_tel = former_tel;
+	public void setOrigin_openid(String origin_openid) {
+		this.origin_openid = origin_openid;
 	}
 
-	public String getNow_tel() {
-		return now_tel;
+
+	public BigDecimal getSale_price() {
+		return sale_price;
 	}
 
-	public void setNow_tel(String now_tel) {
-		this.now_tel = now_tel;
+	public void setSale_price(BigDecimal sale_price) {
+		this.sale_price = sale_price;
 	}
 
-	public String getStart_time() {
+	public long getEnd_time() {
+		return end_time;
+	}
+
+	public void setEnd_time(long end_time) {
+		this.end_time = end_time;
+	}
+
+	public long getStart_time() {
 		return start_time;
 	}
-
-	public void setStart_time(String start_time) {
+	public void setStart_time(long start_time) {
 		this.start_time = start_time;
 	}
-
-	public String getBegin_time() {
+	public long getBegin_time() {
 		return begin_time;
 	}
-
-	public void setBegin_time(String begin_time) {
+	public void setBegin_time(long begin_time) {
 		this.begin_time = begin_time;
 	}
-
-	public String getWay() {
+	public int getWay() {
 		return way;
 	}
 
-	public void setWay(String way) {
+	public void setWay(int way) {
 		this.way = way;
 	}
 
-	public String getRent_history() {
-		return rent_history;
-	}
-
-	public void setRent_history(String rent_history) {
-		this.rent_history = rent_history;
-	}
 
 	public BigDecimal getRent_price() {
 		return rent_price;
@@ -140,6 +126,10 @@ public class Rented {
 	public void setRent_price(BigDecimal rent_price) {
 		this.rent_price = rent_price;
 	}
-	
-	
+	public int getSureornot() {
+		return sureornot;
+	}
+	public void setSureornot(int sureornot) {
+		this.sureornot = sureornot;
+	}	
 }

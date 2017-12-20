@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lq.entity.Rentable;
+import com.lq.other.PartRentable;
 import com.lq.dao.RentableDao;
 @Service
 public class RentableServiceImpl implements RentableService{
@@ -29,5 +30,25 @@ public class RentableServiceImpl implements RentableService{
 	public List<Rentable> getRentables(int startlocation, int size) {
 		// TODO Auto-generated method stub
 		return rentableDao.getRentables(startlocation, size);
+	}
+	@Override
+	public List<PartRentable> getPartRentables(int startlocation, int size) {
+		// TODO Auto-generated method stub
+		return rentableDao.getPartRentables(startlocation, size);
+	}
+	@Override
+	public Rentable getOneRentable(int id) {
+		// TODO Auto-generated method stub
+		return rentableDao.getOneRentable(id);
+	}
+	@Override
+	public boolean moveRentable(int bookid) {
+		// TODO Auto-generated method stub
+		return rentableDao.moveRentable(bookid);
+	}
+	@Override
+	public boolean moveRentabletoSale(int bookid) {
+		// TODO Auto-generated method stub
+		return rentableDao.moveRentabletoSale(bookid);
 	}
 }
