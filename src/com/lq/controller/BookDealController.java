@@ -1,11 +1,14 @@
 package com.lq.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.lq.entity.Rentable;
+import com.lq.entity.TradeLog;
 import com.lq.service.RentableService;
 import com.lq.service.RentedService;
 import com.lq.service.SaleService;
@@ -13,44 +16,48 @@ import com.lq.service.UserService;
 @Controller
 @RequestMapping("/bookdeal")
 public class BookDealController{
+		private static final int Rent = 1;
 		@Autowired
 		private RentableService rentableService;
 		@Autowired
 		private RentedService rentedService;
 		@Autowired
-		private UserService userService;
-		@Autowired
 		private SaleService saleService;
+		@Autowired
+		private UserService userService;
 		/*
 		 * author lmr
 		 * time   2017/12/19
 		 * function 用户买书或者租书时，书在表间的移动
+		 * 书的移动从可租可借调到已租或已借表 
+		 * 书当前持有者关系变更
+		 * * 若是租书period在设定的区间内，建议1-180天
+		 * 若是买书period恒为0，表示永久
 		 * */
 		@RequestMapping("/trade")
-	    public void maketrade(int bookid,String userid,boolean rentbtn,boolean sellbtn,int period,HttpServletRequest request,ServletResponse response) {
-			/*
-			 * 书的移动从可租可借调到已租或已借表 
-			 * 书当前持有者关系变更
-			 * */
+	    public void maketrade(int bookid,String userid,boolean rorbtn,int period,String phone,String grade,String sex,HttpServletRequest request,ServletResponse response) {
+			
 			int sureornot = 0;
 			int now_way = 0;
 			long begin_time = System.currentTimeMillis();
 			long end_time = System.currentTimeMillis()+period*24*60*60*1000;
-			if(rentbtn){
+			Rentable rentable = rentableService.getOneRentable(bookid);
+			BigDecimal monney = null;
+			if(rorbtn){
 				now_way = 1;
-				rentableService.getOneRentable(bookid).setWay(now_way);
 				rentableService.moveRentable(bookid);
 				rentedService.updateRented(bookid,begin_time,end_time,sureornot);	
-
+				monney = rentable.getRent_price().multiply(new BigDecimal(period));
 			}
 			else {
 				now_way = 2;
 				rentableService.moveRentabletoSale(bookid);
 				saleService.updateSale(bookid,begin_time,sureornot);	
+				monney = rentable.getSale_price();
 			}
-			userService.addlogandformer(userid,bookid,begin_time,now_way,period);
-			userService.updateBookOwner(userid,bookid);
-			
+			TradeLog tradeLog  = new TradeLog(begin_time,period,now_way,userService.getBookOwner(bookid).getUserid(),userid,monney); 
+			userService.addlogandformer(tradeLog,rentable.getOrigin_openid(),bookid);
+			userService.updateBookOwner(userid,bookid,tradeLog.getId());
 			String data = "{\"result\":dealsuccess }";	
 			try{
 				PrintWriter out = response.getWriter();
@@ -59,6 +66,7 @@ public class BookDealController{
 				e.printStackTrace();				
 			}
 		}
+		
 		/*
 		 * author 	lmr
 		 * time		2017/12/20 18:58
@@ -66,10 +74,11 @@ public class BookDealController{
 		 * */
 		@RequestMapping("/confirm")
 	    public void dealconfirm(int bookid,String userid,HttpServletRequest request,ServletResponse response) {
+			
 			response.setContentType("application/json");
 			int sureornot = 1;
 			rentedService.dealConfirm(bookid,sureornot);
-	    	String data = "{\"result\":confirmsuccess }";	
+	    	String data = "{\"result\":confirm}";	
 			try{
 				PrintWriter out = response.getWriter();
 				out.write(data);
@@ -83,10 +92,15 @@ public class BookDealController{
 		 * function cancel 交易取消
 		 * */
 		@RequestMapping("/cancel")
-	    public void dealcancel(int bookid,HttpServletRequest request,ServletResponse response) {
+	    public void dealcancel(int bookid,String reason,HttpServletRequest request,ServletResponse response) {
 			
-			userService.resumeBookOwner(bookid);
-			rentedService.dealCancel(bookid);
+			String tablename = "Sale";
+			TradeLog log = userService.getLogByid(userService.getBookOwner(bookid).getLogid());
+			userService.movetoFaillog(log.getId(),reason);
+			userService.resumeBookOwner(bookid,log.getManA());
+			if(log.getWay() == Rent)
+				tablename  = "Rent";
+			rentableService.backRentable(bookid,tablename);
 			String data = "{\"result\":cacelsuccess }";	
 			try{
 				PrintWriter out = response.getWriter();

@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lq.entity.Isbn;
 import com.lq.entity.Rentable;
 import com.lq.other.PartRentable;
 import com.lq.dao.RentableDao;
@@ -50,5 +51,16 @@ public class RentableServiceImpl implements RentableService{
 	public boolean moveRentabletoSale(int bookid) {
 		// TODO Auto-generated method stub
 		return rentableDao.moveRentabletoSale(bookid);
+	}
+	@Override
+	public boolean backRentable(int bookid,String tablename) {
+		// TODO Auto-generated method stub
+		return rentableDao.backRentable(bookid,tablename);
+	}
+	
+	@Override
+	public Isbn getBookInfo(int index) {
+		// TODO Auto-generated method stub
+		return rentableDao.getBookInfo(index);
 	}
 }

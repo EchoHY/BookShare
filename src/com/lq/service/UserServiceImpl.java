@@ -4,13 +4,23 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lq.dao.UserBookDao;
+import com.lq.dao.UserBookLogDao;
 import com.lq.dao.UserDao;
 import com.lq.entity.BookOwner;
+import com.lq.entity.Rentable;
+import com.lq.entity.Rented;
+import com.lq.entity.Sale;
+import com.lq.entity.TradeLog;
 import com.lq.entity.User;
 @Service
 public class UserServiceImpl implements UserService{
 	@Autowired 
 	private UserDao userDao;
+	@Autowired 
+	private UserBookDao userbookDao;
+	@Autowired 
+	private UserBookLogDao userbooklogDao;
 	@Override
 	public void addUser(User user) {
 		// TODO Auto-generated method stub
@@ -50,32 +60,93 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void addUserBookRelation(BookOwner bookowner) {
+	public void addBookOwner(BookOwner bookowner) {
 		// TODO Auto-generated method stub
-		userDao.addUserBookRelation(bookowner);
+		userbookDao.addBookOwner(bookowner);
 	}
 
 	@Override
-	public boolean updateUserBookRelation(int bookid) {
+	public boolean resumeBookOwner(int bookid,String lastuserid) {
 		// TODO Auto-generated method stub
-		return userDao.updateUserBookRelation(bookid);
+		return userbookDao.resumeBookOwner(lastuserid,bookid);
+	}
+	@Override
+	public boolean updateBookOwner(String userid, int bookid,int logid) {
+		// TODO Auto-generated method stub
+		return userbookDao.updateBookOwner(userid, bookid,logid);
 	}
 
 	@Override
-	public boolean resumeBookOwner(int bookid) {
+	public BookOwner getBookOwner(int bookid) {
 		// TODO Auto-generated method stub
-		return userDao.resumeBookOwner(bookid);
+		return userbookDao.getBookOwner(bookid);
 	}
+	
+
 	@Override
-	public boolean updateBookOwner(String userid, int bookid) {
+	public void addlogandformer( TradeLog tradeLog,String origin_openid,int bookid) {
 		// TODO Auto-generated method stub
-		return userDao.updateBookOwner(userid, bookid);
+		userbooklogDao.addlogandformer(tradeLog, origin_openid, bookid);
+	}
+	
+	@Override
+	public List<Sale> getAllSale(String userid) {
+		// TODO Auto-generated method stub
+		return userbookDao.getAllSale(userid);
 	}
 
 	@Override
-	public void addlogandformer(String userid, int bookid, long begin_time,
-			int now_way, int period) {
+	public List<Rented> getAllRented(String userid) {
 		// TODO Auto-generated method stub
-		userDao.addlogandformer(userid,bookid,begin_time,now_way,period);
+		return userbookDao.getAllRented(userid);
 	}
+
+	@Override
+	public List<Rentable> getAllOutDate(String userid) {
+		// TODO Auto-generated method stub
+		return userbookDao.getAllOutDate(userid);
+	}
+
+	@Override
+	public List<Rentable> getAllRentable(String userid) {
+		// TODO Auto-generated method stub
+		return userbookDao.getAllRentable(userid);
+	}
+
+	@Override
+	public List<TradeLog> getlogsByuserandbookid(String userid, int bookid) {
+		// TODO Auto-generated method stub
+		return userbooklogDao.getlogsByuserandbookid(userid,bookid);
+	}
+
+	@Override
+	public boolean delBookOwner(int bookid) {
+		// TODO Auto-generated method stub
+		return userbookDao.delBookOwner(bookid);
+	}
+
+	@Override
+	public List<Integer> getBooksfromBookOwner(String userid) {
+		// TODO Auto-generated method stub
+		return userbookDao.getBooksfromBookOwner(userid);
+	}
+
+	@Override
+	public TradeLog getLogByid(int logid) {
+		// TODO Auto-generated method stub
+		return userbookDao.getLogByid(logid);
+	}
+
+	@Override
+	public boolean movetoFaillog(int logid,String reason) {
+		// TODO Auto-generated method stub
+		return userbooklogDao.movetoFaillog(logid,reason);
+	}
+
+	@Override
+	public List<Integer> getBooksfromFormer(String userid) {
+		// TODO Auto-generated method stub
+		return userbooklogDao.getBooksfromFormer(userid);
+	}
+
 }

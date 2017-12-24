@@ -1,8 +1,13 @@
 package com.lq.dao;
+import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+
+import com.lq.entity.Sale;
 @Repository
 public class SaleDaoImpl implements SaleDao{
 	@Resource(name="sessionFactory")
@@ -17,5 +22,15 @@ public class SaleDaoImpl implements SaleDao{
 		query.setInteger(1, sureornot);
 		query.setInteger(2, bookid);
 		return (query.executeUpdate()>0);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Sale> getSalewithoutConfirm(List<Integer> books) {
+		// TODO Auto-generated method stub
+		String hql = "FROM Sale u WHERE u.sureornot = 0 and u.id in (:alist)";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameterList("alist", books);
+		return query.list();
 	}
 }

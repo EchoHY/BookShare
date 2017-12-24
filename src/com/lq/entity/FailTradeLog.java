@@ -2,19 +2,16 @@ package com.lq.entity;
 import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 @Entity
-@Table(name = "t_tradelog")
-public class TradeLog{
+@Table(name = "t_failtradelog")
+public class FailTradeLog{
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE,generator="tableGenerator")
-	@TableGenerator(name="tableGenerator",initialValue=1,allocationSize=1)
 	private int id;
+	@Column(length = 32)
+	private String reason;
 	private long  deal_time;
 	private int period;
 	private int	way;
@@ -24,8 +21,10 @@ public class TradeLog{
 	private String manB;
 	private BigDecimal money; 
 	
-	public TradeLog(){}
-	public TradeLog(long deal_time,int period,int way,String manA,String manB,BigDecimal monney){
+	public FailTradeLog(){}
+	public FailTradeLog(int id,String reason,long deal_time,int period,int way,String manA,String manB,BigDecimal monney){
+		this.id			= id;
+		this.reason 	= reason;
 		this.deal_time 	= deal_time;
 		this.period    	= period;
 		this.way 	   	= way;
@@ -38,6 +37,12 @@ public class TradeLog{
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public String getReason() {
+		return reason;
+	}
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 	public long getDeal_time() {
 		return deal_time;

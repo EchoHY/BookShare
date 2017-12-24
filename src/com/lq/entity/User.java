@@ -10,7 +10,24 @@ public class User {
 	private String id;
 	
 	@Column(length = 32)
-	private String nickname;
+	private String phone;
+	
+	@Column(length = 32)
+	private String grade;
+	
+	@Column(length = 32)
+	private String sex;
+	
+	public User(){}
+	public User(String id){
+		this.id = id;
+	}
+	public User(String id,String phone,String grade,String sex){
+		this.id = id;
+		this.phone = phone;
+		this.grade = grade;
+		this.sex = sex;
+	}
 	
 	public String getId() {
 		return id;
@@ -18,14 +35,6 @@ public class User {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
 	}
 
 	public String getPhone() {
@@ -51,14 +60,5 @@ public class User {
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
-
-	@Column(length = 32)
-	private String phone;
-	
-	@Column(length = 32)
-	private String grade;
-	
-	@Column(length = 32)
-	private String sex;
 
 }

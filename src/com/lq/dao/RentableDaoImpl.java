@@ -1,10 +1,14 @@
 package com.lq.dao;
 import java.util.List;
+
 import javax.annotation.Resource;
+
+import com.lq.entity.Isbn;
 import com.lq.entity.Rentable;
 import com.lq.entity.Rented;
 import com.lq.entity.Sale;
 import com.lq.other.PartRentable;
+
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -18,7 +22,7 @@ public class RentableDaoImpl implements RentableDao{
 	}
 	@Override
 	public boolean delRentable(int index) {
-		String hql = "delete Rentable u where u.index = ?";
+		String hql = "delete Rentable u where u.id= ?";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setInteger(0, index);
 		return (query.executeUpdate() > 0);
@@ -26,7 +30,6 @@ public class RentableDaoImpl implements RentableDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Rentable> getRentables(int startlocation, int size) {
-		//String hql = "FROM Rentable order by createdTime desc";
 		String hql = "FROM Rentable";
 		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
@@ -42,38 +45,53 @@ public class RentableDaoImpl implements RentableDao{
 		query.setInteger(1, id);
 		return (query.executeUpdate()>0);
 	}
+	/*
+	 * 需要把rentable表中所有与rented重复的字段全部复制到new Rented中
+	 */
 	@Override
 	public boolean moveRentable(int index) {
-		
-		String hql = "select new Rented(u.id,u.picture,u.information,"
-				+ "u.origin_openid,u.start_time,u.way,u.rent_price,u.sale_price) "
-				+ "from Rentable u where u.id=?";
-    	//需要把rentable表中所有与rented重复的字段全部复制到new Rented中
+		// TODO Auto-generated method stub
+		String hql = "select new Rented(u.id,u.picture,u.information,u.origin_openid,"
+				+ "u.start_time,u.way,u.rent_price,u.sale_price) from Rentable u where u.id=?";
     	Query query = sessionFactory.getCurrentSession().createQuery(hql);
     	query.setInteger(0, index);
-    	//有一些问题，字段不是全部匹配上的，
     	sessionFactory.getCurrentSession().save((Rented) query.uniqueResult());
     	hql = "delete Rentable u where u.id = ?";
     	query = sessionFactory.getCurrentSession().createQuery(hql);
     	query.setInteger(0, index);
     	return (query.executeUpdate()>0);
 	}
+	/*
+	 * 需要把rentable表中所有与sale重复的字段全部复制到new Sale中
+	 */
 	@Override
 	public boolean moveRentabletoSale(int bookid) {
 		// TODO Auto-generated method stub
-		String hql = "select new Sale(u.id,u.picture,u.information,"
-				+ "u.origin_openid,u.start_time,u.way,u.rent_price,u.sale_price) "
-				+ "from Rentable u where u.id=?";
-    	//需要把rentable表中所有与sale重复的字段全部复制到new Sale中
+		String hql = "select new Sale(u.id,u.picture,u.information,u.origin_openid,u.start_time,"
+				+ "u.way,u.rent_price,u.sale_price) from Rentable u where u.id=?";
     	Query query = sessionFactory.getCurrentSession().createQuery(hql);
     	query.setInteger(0, bookid);
-    	//有一些问题，字段不是全部匹配上的，
     	sessionFactory.getCurrentSession().save((Sale) query.uniqueResult());
     	hql = "delete Rentable u where u.id = ?";
     	query = sessionFactory.getCurrentSession().createQuery(hql);
     	query.setInteger(0, bookid);
     	return (query.executeUpdate()>0);
 	}
+	@Override
+	public boolean backRentable(int bookid,String tablename) {
+		// TODO Auto-generated method stub		
+		String hql = "select new Rentable(u.id,u.picture,u.information,u.origin_openid,"
+				+ "u.start_time,u.way,u.rent_price,u.sale_price) from"+tablename+" u where u.id=?";
+    	Query query = sessionFactory.getCurrentSession().createQuery(hql);
+    	query.setInteger(0, bookid);
+    	sessionFactory.getCurrentSession().save((Rentable) query.uniqueResult());
+    	hql = "delete Rented u where u.id = ?";
+    	query = sessionFactory.getCurrentSession().createQuery(hql);
+    	query.setInteger(0, bookid);
+    	return (query.executeUpdate()>0);
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PartRentable> getPartRentables(int startlocation, int size) {
@@ -92,6 +110,19 @@ public class RentableDaoImpl implements RentableDao{
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setInteger(0, id);
 		return (Rentable) query.uniqueResult();
+	}
+	@Override
+	public Isbn getBookInfo(int bookid) {
+		// TODO Auto-generated method stub
+		String hql = "FROM Rentable u Where u.id=?";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setInteger(0, bookid);
+		Rentable rentable = (Rentable)query.uniqueResult();
+		String isbn = rentable.getInformation();
+		hql = "FROM Isbn u Where u.isbn=? ";
+		query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setString(0, isbn);
+		return (Isbn) query.uniqueResult();
 	}
 
 }

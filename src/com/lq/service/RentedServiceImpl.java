@@ -12,11 +12,6 @@ public class RentedServiceImpl implements RentedService{
 	@Autowired
 	private RentedDao rentedDao;
 	@Override
-	public boolean dealCancel(int index) {
-		// TODO Auto-generated method stub
-		return rentedDao.dealCancel(index);
-	}
-	@Override
 	public boolean moveToWorthless(int index) {
 		// TODO Auto-generated method stub
 		return false;
@@ -40,5 +35,10 @@ public class RentedServiceImpl implements RentedService{
 	public boolean updateRented(int bookid,long begin_time, long end_time,int sureornot) {
 		// TODO Auto-generated method stub
 		return rentedDao.updateRented(bookid,begin_time,end_time,sureornot);
+	}
+	@Override
+	public List<Rented> getRentedwithoutConfirm(List<Integer> books) {
+		// TODO Auto-generated method stub
+		return rentedDao.getRentedwithoutConfirm(books);
 	}
 }

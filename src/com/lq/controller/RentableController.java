@@ -38,8 +38,9 @@ public class RentableController{
 	    public void bookapplication(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException{
 			request.setCharacterEncoding("utf-8");
 			/* 2017/12/18
-			 * 随同书信息一起上传的用户ID
-			 * 用户的手机号码
+			 * 随同书信息一起上传的用户ID,检查该用户是否已经注册
+			 * 若已经注册过，更新该用户的手机号码
+			 * 若没有注册过，注册该用户，补充该用户的手机号
 			 * */
 			String userid = request.getParameter("userid");
 			String origin_tel = request.getParameter("origin_tel");
@@ -57,31 +58,30 @@ public class RentableController{
 			 * */
 			boolean rentbtn = Boolean.parseBoolean(request.getParameter("rentbtn"));
 			boolean sellbtn = Boolean.parseBoolean(request.getParameter("sellbtn"));
-			String onlycode = request.getParameter("onlycode");
-			/*
-			 * 图片远程地址处理
-			 *过滤器 -> 过滤图片请求,不拦截图片URL
+			String  onlycode= request.getParameter("onlycode");
+			/* 图片远程地址处理	过滤图片请求,不拦截图片URL
 			 * similar-> "http://api.jisuapi.com/isbn/upload/20161010/174050_28792.jpg"
 			 * */
-			String filetype = ".jpg";//判断上传图片格式需要做
-			String picFirName = "OpenId" + "fir" + onlycode + filetype;//onlycode 作为图片名字一部分
-			String path = "http://xxx.com/"+"image/";//就有一个问题图片的路径怎么对应上URL
-			String picPath = path+picFirName;
+			String filetype   = ".jpg";//判断上传图片格式需要做
+			String picName = "OpenId" +onlycode + filetype;//onlycode 作为图片名字一部分
+			//String fileName = "OpenId"+onlycode +filetype;
+			String ip         = "localhost:8082/";
+			String path       = "http://"+ip+"image/";//就有一个问题图片的路径怎么对应上URL
+			String picPath    = path+picName;
 			String information= request.getParameter("isbn");
 			String rent_price = request.getParameter("rent_price");
 			String sale_price = request.getParameter("sale_price");	
-			long start_time = System.currentTimeMillis();
-			/*
-			 * 读取交易方式
+			long   start_time = System.currentTimeMillis();
+			/* 读取交易方式
 			 * 只可出租 way = 1 
 			 * 只可卖     way = 2
 			 * 可租可卖 way = 3
 			 * */
 			int way = 0;
 			if(sellbtn && rentbtn)	way = 3;
-			else if(rentbtn)	way = 1;
-			else if(sellbtn)	way = 2;
-			else 	way = 0;
+			else if(sellbtn)		way = 2;
+			else if(rentbtn)	    way = 1;
+			else 					way = 0;
 			/*
 			 * addRentableandOwner
 			 * */
@@ -101,8 +101,7 @@ public class RentableController{
 			 * 书——用户关系表，即所有者表的注册，采用复合主码
 			 * 是否能取到书序号
 			 * */
-			BookOwner bookowner = new BookOwner(rentable.getId(),userid);
-			userService.addUserBookRelation(bookowner);
+			userService.addBookOwner(new BookOwner(rentable.getId(),userid,0));
 			/*
 			 * 向数据库isbn表查询是否有存在该书的信息
 			 * */
@@ -121,7 +120,7 @@ public class RentableController{
 			}
 		}
 		@RequestMapping("/saveisbn")
-	    public void saveisbn(Isbn isbninfo,HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException{
+	    public void saveisbn(Isbn isbninfo,HttpServletRequest request,HttpServletResponse response){
 				isbnService.addIsbnInfor(isbninfo);	
 				String data = "{\"result\":\"isbn register success\"}";			  
 				try{
@@ -131,12 +130,13 @@ public class RentableController{
 					e.printStackTrace();				
 				}
 		}
-		@RequestMapping("/getUserPhone")
-		public void getUserPhone(String userid,HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
-				
-				String data = "{\"phone\":\""+0+"\",\"fail\":\""+1+"\"}";
-				if(userService.getOneUserInfo(userid) != null){
-					data = "{\"phone\":\""+userService.getOneUserInfo(userid).getPhone()+"\",\"fail\":\""+0+"\"}";
+		/*@RequestMapping("/rentableCancel")
+		public void rentableCancel(int bookid,HttpServletRequest request,HttpServletResponse response){
+				String data = "{\"result\":\"book does't exist\"}";	
+				if(rentableService.getOneRentable(bookid)!=null){
+					userService.delBookOwner(bookid);
+					rentableService.delRentable(bookid);
+					data = "{\"result\":\"cacel success\"}";	
 				}
 				try{
 					PrintWriter out = response.getWriter();
@@ -144,5 +144,5 @@ public class RentableController{
 				}catch(IOException e){
 					e.printStackTrace();				
 				}
-		}
+		}*/
 }	

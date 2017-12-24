@@ -1,11 +1,7 @@
 package com.lq.dao;
 import java.util.List;
-
 import javax.annotation.Resource;
-
-import com.lq.entity.Rentable;
 import com.lq.entity.Rented;
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -13,25 +9,6 @@ import org.springframework.stereotype.Repository;
 public class RentedDaoImpl implements RentedDao{
 	@Resource(name="sessionFactory")
 	private SessionFactory sessionFactory;
-
-	@Override
-	public boolean dealCancel(int index) {
-		// TODO Auto-generated method stub
-		
-		String hql = "select new Rentable(u.id,u.picture,u.information,"
-				+ "u.origin_openid,u.start_time,u.way,u.rent_price,u.sale_price) "
-				+ "from Rentable u where u.id=?";
-    	//需要把rentable表中所有与rented重复的字段全部复制到new Rented中
-    	Query query = sessionFactory.getCurrentSession().createQuery(hql);
-    	query.setInteger(0, index);
-    	//有一些问题，字段不是全部匹配上的，
-    	sessionFactory.getCurrentSession().save((Rentable) query.uniqueResult());
-    	hql = "delete Rented u where u.id = ?";
-    	query = sessionFactory.getCurrentSession().createQuery(hql);
-    	query.setInteger(0, index);
-    	return (query.executeUpdate()>0);
-		
-	}
 
 	@Override
 	public boolean moveToWorthless(int index) {
@@ -72,5 +49,14 @@ public class RentedDaoImpl implements RentedDao{
 		query.setInteger(2, sureornot);
 		query.setInteger(3, bookid);
 		return (query.executeUpdate()>0);
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Rented> getRentedwithoutConfirm(List<Integer> books) {
+		// TODO Auto-generated method stub
+		String hql = "FROM Rented u WHERE u.sureornot = 0 and u.id in (:alist)";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameterList("alist", books);
+		return query.list();
 	}
 }

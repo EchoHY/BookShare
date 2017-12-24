@@ -4,9 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lq.dao.RentedDao;
 import com.lq.dao.SaleDao;
-import com.lq.entity.Rented;
 import com.lq.entity.Sale;
 @Service
 public class SaleServiceImpl implements SaleService{
@@ -48,6 +46,12 @@ public class SaleServiceImpl implements SaleService{
 	public boolean updateSale(int bookid, long start_time, int sureornot) {
 		// TODO Auto-generated method stub
 		return saleDao.updateSale(bookid,start_time,sureornot);
+	}
+
+	@Override
+	public List<Sale> getSalewithoutConfirm(List<Integer> books) {
+		// TODO Auto-generated method stub
+		return saleDao.getSalewithoutConfirm(books);
 	}
 
 }
