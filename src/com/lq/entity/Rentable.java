@@ -1,21 +1,20 @@
 package com.lq.entity;
 import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+//import javax.persistence.GeneratedValue;
+//import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+//import javax.persistence.TableGenerator;
 @Entity
 @Table(name = "t_rentable")
 public class Rentable {
 
 	//序号：作为表的主键，结构是：原主人手机号+原主人首次提交信息的年月日时分秒，如1871122334420171231120000
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE,generator="tableGenerator")
-	@TableGenerator(name="tableGenerator",initialValue=0,allocationSize=1)
+	//@GeneratedValue(strategy=GenerationType.TABLE,generator="tableGenerator")
+	//@TableGenerator(name="tableGenerator",initialValue=0,allocationSize=1)
 	private int id;
 	
 	@Column(length = 64)
@@ -45,8 +44,7 @@ public class Rentable {
 	private BigDecimal sale_price;
 
 	public Rentable(){}
-	public Rentable(int id,String picture,String information,String origin,
-			String origin_openid,long start_time,int way,BigDecimal rent_price,BigDecimal sale_price){
+	public Rentable(int id,String picture,String information,String origin_openid,long start_time,int way,BigDecimal rent_price,BigDecimal sale_price){
 		this.id = id;
 		this.picture = picture;
 		this.information = information;

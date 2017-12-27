@@ -22,9 +22,9 @@ public class FailTradeLog{
 	private BigDecimal money; 
 	
 	public FailTradeLog(){}
-	public FailTradeLog(int id,String reason,long deal_time,int period,int way,String manA,String manB,BigDecimal monney){
+	public FailTradeLog(int id,long deal_time,int period,int way,String manA,String manB,BigDecimal monney){
 		this.id			= id;
-		this.reason 	= reason;
+		//this.reason 	= reason;
 		this.deal_time 	= deal_time;
 		this.period    	= period;
 		this.way 	   	= way;

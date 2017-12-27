@@ -15,4 +15,8 @@ public interface RentableDao {
 	public boolean updateRentable(int id,String picture);
 	public Isbn getBookInfo(int index);
 	public boolean backRentable(int bookid, String tablename);
+	public boolean updateRentableId(int bookid);
+	public int getGeneratorId();
+	public boolean updateGeneratorId(int id);
+	
 }

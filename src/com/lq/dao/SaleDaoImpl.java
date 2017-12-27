@@ -1,12 +1,9 @@
 package com.lq.dao;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-
 import com.lq.entity.Sale;
 @Repository
 public class SaleDaoImpl implements SaleDao{
@@ -32,5 +29,15 @@ public class SaleDaoImpl implements SaleDao{
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameterList("alist", books);
 		return query.list();
+	}
+
+	@Override
+	public Sale getOneSale(int bookid) {
+		// TODO Auto-generated method stub
+		String hql = "FROM Sale u Where u.id=? ";
+		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setInteger(0, bookid);
+		return (Sale) query.uniqueResult();
 	}
 }

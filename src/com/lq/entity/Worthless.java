@@ -16,7 +16,7 @@ public class Worthless {
 	private String name;
 	
 	//书的图片:从表一复制
-	@Column(length = 32)
+	@Column(length = 64)
 	private String picture;
 	
 	//书的信息:从表一复制

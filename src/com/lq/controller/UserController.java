@@ -60,10 +60,14 @@ public class UserController{
 		 * */
 		@RequestMapping("/getUserInfo")
 		public void getUserInfo(String userid,HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
-				
+			
 			String data = "{\"result\":\"\",\"state\":\""+0+"\"}";
 			if(userService.getOneUserInfo(userid) != null){
 				data = "{\"result\":\""+JSON.toJSONString(userService.getOneUserInfo(userid))+"\",\"state\":\""+1+"\"}";
+			}else{
+				User user = new User();
+				user.setId(userid);
+				userService.addUser(user);	
 			}
 			try{
 				PrintWriter out = response.getWriter();
@@ -264,7 +268,7 @@ public class UserController{
 			 * */
 			int status = 0;
 			String data = "{\"status\":\""+status+"\",\"result\":\"此书正在被租借不可取回\"}";
-			if(saleService.getOneSale(bookid)!=null){
+			if(saleService.getOneSale(bookid) !=null){
 				data = "{\"status\":\""+status+"\",\"result\":\"此书已经售出不可取回\"}";
 			}
 			else if(rentedService.getOneRented(bookid)==null){
@@ -277,7 +281,7 @@ public class UserController{
 				data = "{\"status\":\""+status+"\",\"result\":"+phone+"}";
 				/*way =0 ,代表书不可租不可售,此时书在列表中处于不可租售状态
 				 * */
-				rentableService.getOneRentable(bookid).setWay(0);
+				rentableService.getOneRentable(bookid);
 			}
 			try{
 				PrintWriter out = response.getWriter();
@@ -292,7 +296,7 @@ public class UserController{
 		 * function 停止分享，原主人已经取回书，此时删除书表记录，删除书持有者记录
 		 * */
 		@RequestMapping("/stopconfirm")
-	    public void stopconfirm(int bookid,String origin_openid,HttpServletRequest request,HttpServletResponse response) {
+	    public void stopconfirm(int bookid,String userid,HttpServletRequest request,HttpServletResponse response) {
 			
 			rentableService.delRentable(bookid);
 			/*now_way=0 代表原主人已取回，此书已经停止分享，需要恢复分享才能延续生命
@@ -302,8 +306,9 @@ public class UserController{
 			int now_way  = 0;
 			int period = 1025;
 			BigDecimal money = new BigDecimal(0).setScale(1, BigDecimal.ROUND_HALF_UP);
-			TradeLog tradeLog  = new TradeLog(System.currentTimeMillis(),period,now_way,userService.getBookOwner(bookid).getUserid(),origin_openid,money); 
-			userService.addlogandformer(tradeLog, origin_openid, bookid);
+			TradeLog tradeLog  = new TradeLog(System.currentTimeMillis(),period,now_way,userService.getBookOwner(bookid).getUserid(),userid,money); 
+			userService.addlogandformer(tradeLog, userid, bookid);
+			userService.delBookOwner(bookid);
 			String data = "{\"result\":\"success\"}";
 			try{
 				PrintWriter out = response.getWriter();

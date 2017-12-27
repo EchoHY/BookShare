@@ -13,7 +13,7 @@ public class Sale {
 	@Id
 	private int id;	
 	//书的图片:第一次租借时，从上表复制。之后再变换主人时，由上一个主人拍照上传，这么做有利于体现书的新旧程度。
-	@Column(length = 32)
+	@Column(length = 64)
 	private String picture;
 	//书的信息:从上表复制
 	@Column(length = 32)
@@ -36,7 +36,7 @@ public class Sale {
 	private int sureornot;
 
 	public Sale(){}
-	public Sale(int id,String picture,String information,String origin,
+	public Sale(int id,String picture,String information,
 			String origin_openid,long start_time,int way,BigDecimal rent_price,BigDecimal sale_price){
 		this.id = id;
 		this.picture = picture;

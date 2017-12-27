@@ -24,7 +24,7 @@ public class RentedServiceImpl implements RentedService{
 	@Override
 	public Rented getOneRented(int id) {
 		// TODO Auto-generated method stub
-		return null;
+		return rentedDao.getOneRented(id);
 	}
 	@Override
 	public boolean dealConfirm( int bookid,int sureornot) {

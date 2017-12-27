@@ -25,7 +25,11 @@ public class RentedDaoImpl implements RentedDao{
 	@Override
 	public Rented getOneRented(int id) {
 		// TODO Auto-generated method stub
-		return null;
+		String hql = "FROM Rented u Where u.id=? ";
+		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setInteger(0, id);
+		return (Rented) query.uniqueResult();
 	}
 
 	@Override

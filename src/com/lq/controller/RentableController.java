@@ -69,6 +69,7 @@ public class RentableController{
 			String path       = "http://"+ip+"image/";//就有一个问题图片的路径怎么对应上URL
 			String picPath    = path+picName;
 			String information= request.getParameter("isbn");
+			System.out.println(information);
 			String rent_price = request.getParameter("rent_price");
 			String sale_price = request.getParameter("sale_price");	
 			long   start_time = System.currentTimeMillis();
@@ -92,7 +93,10 @@ public class RentableController{
 			rentable.setRent_price(new BigDecimal(rent_price).setScale(1, BigDecimal.ROUND_HALF_UP));
 			rentable.setSale_price(new BigDecimal(sale_price).setScale(1, BigDecimal.ROUND_HALF_UP));
 			rentable.setStart_time(start_time);
-			rentable.setWay(way);
+			rentable.setWay(way);			
+			int id = rentableService.getGeneratorId();
+			rentableService.updateGeneratorId(id);
+			rentable.setId(id);
 			rentableService.addRentable(rentable);
 			/*2017/12/18
 			 * 图书信息注册完成
@@ -105,7 +109,7 @@ public class RentableController{
 			/*
 			 * 向数据库isbn表查询是否有存在该书的信息
 			 * */
-			information = "9787302290124";
+			//information = "9787302290124";
 			response.setContentType("application/json");
 			//应该可以通过一种方式把map转换成JSON数据
 			String data = "{\"result\":\"exist\"}";	

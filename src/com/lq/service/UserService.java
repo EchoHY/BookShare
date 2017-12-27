@@ -27,6 +27,6 @@ public interface UserService {
 	public boolean delBookOwner(int bookid);
 	public List<Integer> getBooksfromBookOwner(String userid);
 	public TradeLog getLogByid(int logid);
-	public boolean movetoFaillog(int logid,String reason);
+	public boolean movetoFaillog(int logid);
 	public List<Integer> getBooksfromFormer(String userid);
 }

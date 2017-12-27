@@ -63,4 +63,19 @@ public class RentableServiceImpl implements RentableService{
 		// TODO Auto-generated method stub
 		return rentableDao.getBookInfo(index);
 	}
+	@Override
+	public boolean updateRentableId(int bookid) {
+		// TODO Auto-generated method stub
+		return rentableDao.updateRentableId(bookid);
+	}
+	@Override
+	public int getGeneratorId() {
+		// TODO Auto-generated method stub
+		return rentableDao.getGeneratorId();
+	}
+	@Override
+	public boolean updateGeneratorId(int id) {
+		// TODO Auto-generated method stub
+		return rentableDao.updateGeneratorId(id);
+	}
 }

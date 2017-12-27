@@ -33,7 +33,7 @@ public class SaleServiceImpl implements SaleService{
 	@Override
 	public Sale getOneSale(int bookid) {
 		// TODO Auto-generated method stub
-		return null;
+		return saleDao.getOneSale(bookid);
 	}
 
 	@Override

@@ -1,12 +1,9 @@
 package com.lq.dao;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-
 import com.lq.entity.FailTradeLog;
 import com.lq.entity.Former;
 import com.lq.entity.TradeLog;
@@ -47,15 +44,13 @@ public class UserBookLogDaoImpl implements UserBookLogDao{
 	}
 	
 	@Override
-	public boolean movetoFaillog(int logid,String reason) {
+	public boolean movetoFaillog(int logid) {
 		// TODO Auto-generated method stub
-		String hql = "select new FailTradeLog(u.id,?,u.deal_time,u.period,u.way,u.manA,u.manB,u.money) "
-				+ "from TradeLog u where u.id=?";
+		String hql = "select new FailTradeLog(u.id,u.deal_time,u.period,u.way,u.manA,u.manB,u.money) from TradeLog u where u.id=?";
     	Query query = sessionFactory.getCurrentSession().createQuery(hql);
-    	query.setString(0, reason);
-    	query.setInteger(1, logid);
+    	query.setInteger(0, logid);
     	//有一些问题，字段不是全部匹配上的，
-    	sessionFactory.getCurrentSession().save((FailTradeLog) query.uniqueResult());
+    	sessionFactory.getCurrentSession().save((FailTradeLog)query.uniqueResult());
     	hql = "delete TradeLog u where u.id = ?";
     	query = sessionFactory.getCurrentSession().createQuery(hql);
     	query.setInteger(0, logid);

@@ -15,4 +15,7 @@ public interface RentableService {
 	public List<PartRentable> getPartRentables(int startlocation, int size);
 	public boolean updateRentable(int id,String picture);
 	public Isbn getBookInfo(int index);
+	public boolean updateRentableId(int bookid);
+	public int getGeneratorId();
+	public boolean updateGeneratorId(int id);
 }

@@ -38,10 +38,10 @@ public class BookInfoController{
 			System.out.println(data);
 		}
 		@RequestMapping("/ofdetail")
-	    public void bookdetail(int index,HttpServletRequest request,ServletResponse response,ModelMap map) {
+	    public void bookdetail(int bookid,HttpServletRequest request,ServletResponse response,ModelMap map) {
 	    	response.setContentType("application/json");
-			String rentable = JSON.toJSONString(rentableService.getOneRentable(index));
-	    	String detail = JSON.toJSONString(rentableService.getBookInfo(index));
+			String rentable = JSON.toJSONString(rentableService.getOneRentable(bookid));
+	    	String detail = JSON.toJSONString(rentableService.getBookInfo(bookid));
 			String data = "{\"rentable\":"+ rentable +",\"detail\":"+ detail+"}";	
 			try{
 				PrintWriter out = response.getWriter();

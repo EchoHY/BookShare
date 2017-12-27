@@ -1,14 +1,11 @@
 package com.lq.dao;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import com.lq.entity.Isbn;
 import com.lq.entity.Rentable;
 import com.lq.entity.Rented;
 import com.lq.entity.Sale;
 import com.lq.other.PartRentable;
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -17,7 +14,8 @@ public class RentableDaoImpl implements RentableDao{
 	@Resource(name="sessionFactory")
 	private SessionFactory sessionFactory;
 	@Override
-	public void addRentable(Rentable rentable) {
+	public void addRentable(Rentable rentable) {		
+	
 		sessionFactory.getCurrentSession().save(rentable);
 	}
 	@Override
@@ -79,19 +77,26 @@ public class RentableDaoImpl implements RentableDao{
 	}
 	@Override
 	public boolean backRentable(int bookid,String tablename) {
-		// TODO Auto-generated method stub		
-		String hql = "select new Rentable(u.id,u.picture,u.information,u.origin_openid,"
-				+ "u.start_time,u.way,u.rent_price,u.sale_price) from"+tablename+" u where u.id=?";
+		// TODO Auto-generated method stub	
+		String hql = "select new Rentable(u.id,u.picture,u.information,u.origin_openid,u.start_time,"
+				+ "u.way,u.rent_price,u.sale_price) from "+ tablename +" u where u.id=?";
     	Query query = sessionFactory.getCurrentSession().createQuery(hql);
     	query.setInteger(0, bookid);
-    	sessionFactory.getCurrentSession().save((Rentable) query.uniqueResult());
-    	hql = "delete Rented u where u.id = ?";
+    	sessionFactory.getCurrentSession().save((Rentable)query.uniqueResult());    
+    	hql = "delete "+tablename+" u where u.id = ?";
     	query = sessionFactory.getCurrentSession().createQuery(hql);
     	query.setInteger(0, bookid);
     	return (query.executeUpdate()>0);
 		
 	}
-	
+	@Override
+	public boolean updateRentableId(int bookid) {
+		// TODO Auto-generated method stub
+    	String hql = "update Rentable u set u.id=?where u.id=(select MAX(a.id) from Rentable a)";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setInteger(0, bookid);
+		return (query.executeUpdate()>0);
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PartRentable> getPartRentables(int startlocation, int size) {
@@ -123,6 +128,25 @@ public class RentableDaoImpl implements RentableDao{
 		query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setString(0, isbn);
 		return (Isbn) query.uniqueResult();
+	}
+	@Override
+	public int getGeneratorId() {
+		
+		// TODO Auto-generated method stub
+		String hql = "SELECT next_value FROM Generator WHERE name =?";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setString(0,"rentable_id");
+		int id = (Integer)query.uniqueResult();
+		return id;
+	}
+	@Override
+	public boolean updateGeneratorId(int id) {
+		// TODO Auto-generated method stub
+		String hql = "update Generator set next_value=? WHERE name =?";
+		Query query =sessionFactory.getCurrentSession().createQuery(hql);
+		query.setInteger(0, id+1);
+		query.setString(1,"rentable_id");
+		return(query.executeUpdate()>0);
 	}
 
 }

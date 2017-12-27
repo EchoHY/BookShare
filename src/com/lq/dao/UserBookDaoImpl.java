@@ -103,7 +103,7 @@ public class UserBookDaoImpl implements UserBookDao{
 	@Override
 	public TradeLog getLogByid(int logid) {
 		// TODO Auto-generated method stub
-		String hql = "FROM TradeLog u Where u.logid=? ";
+		String hql = "FROM TradeLog u Where u.id=? ";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setInteger(0, logid);
 		return (TradeLog) query.uniqueResult();

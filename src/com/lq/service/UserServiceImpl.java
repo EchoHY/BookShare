@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService{
 	public boolean updateUserInfo(String userid, String phone, String grade,
 			String sex) {
 		// TODO Auto-generated method stub
-		return false;
+		return userDao.updateUserInfo(userid, phone, grade, sex);
 	}
 
 	@Override
@@ -138,9 +138,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public boolean movetoFaillog(int logid,String reason) {
+	public boolean movetoFaillog(int logid) {
 		// TODO Auto-generated method stub
-		return userbooklogDao.movetoFaillog(logid,reason);
+		return userbooklogDao.movetoFaillog(logid);
 	}
 
 	@Override
