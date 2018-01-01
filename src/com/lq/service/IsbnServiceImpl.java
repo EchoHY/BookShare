@@ -1,7 +1,11 @@
 package com.lq.service;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.lq.entity.Isbn;
+import com.lq.other.PartRentable;
 import com.lq.dao.IsbnDao;
 @Service
 public class IsbnServiceImpl implements IsbnService{
@@ -14,6 +18,21 @@ public class IsbnServiceImpl implements IsbnService{
 	@Override
 	public Isbn getOneIsbninfor(String isbn) {
 		return isbndao.getOneIsbninfor(isbn);
+	}
+	@Override
+	public List<PartRentable> getSearchInfo(String keyword) {
+		// TODO Auto-generated method stub
+		return isbndao.getSearchInfo(keyword);
+	}
+	@Override
+	public List<PartRentable> getSearchInfoByTwokey(String keyword,String keyword2) {
+		// TODO Auto-generated method stub
+		return isbndao.getSearchInfoByTwokey(keyword,keyword2);
+	}
+	@Override
+	public List<PartRentable> getSearchInCore(String keyword) {
+		// TODO Auto-generated method stub
+		return isbndao.getSearchInCore(keyword);
 	}
 	
 }

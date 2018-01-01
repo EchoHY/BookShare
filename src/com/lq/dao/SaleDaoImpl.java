@@ -1,9 +1,12 @@
 package com.lq.dao;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+
 import com.lq.entity.Sale;
 @Repository
 public class SaleDaoImpl implements SaleDao{
@@ -39,5 +42,16 @@ public class SaleDaoImpl implements SaleDao{
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setInteger(0, bookid);
 		return (Sale) query.uniqueResult();
+	}
+
+	@Override
+	public boolean dealConfirm(int bookid, int sureornot) {
+		// TODO Auto-generated method stub
+		String hql = "update Sale u set u.sureornot=?where u.id=?";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		//sureornot == 1
+		query.setInteger(0, sureornot);
+		query.setInteger(1, bookid);
+		return (query.executeUpdate()>0);
 	}
 }

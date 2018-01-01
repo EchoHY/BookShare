@@ -16,34 +16,31 @@ public class Rentable {
 	//@GeneratedValue(strategy=GenerationType.TABLE,generator="tableGenerator")
 	//@TableGenerator(name="tableGenerator",initialValue=0,allocationSize=1)
 	private int id;
-	
 	@Column(length = 64)
 	private String picture;
-	
 	//书的信息:由书的原主人提交信息时拍摄书的条码上传或从下表复制
 	@Column(length = 32)
 	private String information;
-
 	//原主人（的手机号）:从书的原主人微信账户中读取
 	@Column(length = 32)
 	private String origin_openid;
-	
-	
 	//上线时间:原主人将此书提交到平台上的时间
 	private long start_time;
-	
 	//交易方式:即书的原主人希望这本书被租出还是卖出（亦或两者均可），由书的原主人提交信息时输入
 	private int way;
-	
 	//租价:由书的原主人提交信息时输入，若只想卖，则此项设为空。单位是固定的。即“元/天”，采用Decimal数据类型存储
 	@Column(length = 32)
 	private BigDecimal rent_price;
-	
 	//售价:由书的原主人提交信息时输入，若只想租，则此项设为空。单位是固定的。即“元”，采用Decimal数据类型存储。
 	@Column(length = 32)
 	private BigDecimal sale_price;
-
 	public Rentable(){}
+	public Rentable(int id,String information,String origin_openid,long start_time){
+		this.id = id;
+		this.information = information;
+		this.origin_openid = origin_openid;
+		this.start_time = start_time;
+	}
 	public Rentable(int id,String picture,String information,String origin_openid,long start_time,int way,BigDecimal rent_price,BigDecimal sale_price){
 		this.id = id;
 		this.picture = picture;

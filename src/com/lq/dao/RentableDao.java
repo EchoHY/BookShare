@@ -1,4 +1,5 @@
 package com.lq.dao;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.lq.entity.Isbn;
@@ -13,10 +14,14 @@ public interface RentableDao {
 	public Rentable getOneRentable(int id);
 	public List<PartRentable> getPartRentables(int startlocation, int size);
 	public boolean updateRentable(int id,String picture);
-	public Isbn getBookInfo(int index);
+	public Isbn getBookInfo(String isbn);
 	public boolean backRentable(int bookid, String tablename);
-	public boolean updateRentableId(int bookid);
+	public boolean updateRentableWay(int bookid,int way);
 	public int getGeneratorId();
 	public boolean updateGeneratorId(int id);
-	
+	public List<Rentable> getRentableWayBelowZero(String userid);
+	public boolean moveRentabletoStop(int bookid);
+	public boolean moveRentableFromStop(int bookid);
+	public boolean updateRentableInfo(int bookid, String picPath,BigDecimal rent_price, BigDecimal sale_price, int way);
+	public Long getRentableLen();
 }

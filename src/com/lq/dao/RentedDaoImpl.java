@@ -1,7 +1,10 @@
 package com.lq.dao;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import com.lq.entity.Rented;
+
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -16,10 +19,15 @@ public class RentedDaoImpl implements RentedDao{
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Rented> getRented(String userid) {
 		// TODO Auto-generated method stub
-		return null;
+		String hql = "FROM Rented u Where u.id in(select b.bookid from BookOwner b where b.userid =?) ";
+		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setString(0, userid);
+		return query.list();
 	}
 
 	@Override

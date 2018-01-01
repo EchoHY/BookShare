@@ -1,6 +1,12 @@
 package com.lq.dao;
+import java.util.List;
+
 import com.lq.entity.Isbn;
+import com.lq.other.PartRentable;
 public interface IsbnDao {
 	public void addIsbn(Isbn isbninfo);
 	public Isbn getOneIsbninfor(String isbn);
+	public List<PartRentable> getSearchInfo(String keyword);
+	public List<PartRentable> getSearchInfoByTwokey(String keyword,String keyword2);
+	public List<PartRentable> getSearchInCore(String keyword);
 }

@@ -16,7 +16,7 @@ public class UserBookLogDaoImpl implements UserBookLogDao{
 	@Override
 	public List<TradeLog> getlogsByuserandbookid(String userid, int bookid) {
 		// TODO Auto-generated method stub
-		String hql = "FROM TradeLog u Where u.userid=? and u.bookid=? ORDER BY u.id DESC";
+		String hql = "FROM TradeLog u Where u.id in(select t.logid from Former t where t.userid=? and t.bookid=?) ORDER BY u.id DESC";
 		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setString(0, userid);

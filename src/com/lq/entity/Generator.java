@@ -8,6 +8,11 @@ public class Generator {
 	private String name;
 	private int next_value;
 	public Generator(){}
+	public Generator(String name, int next_value) {
+		// TODO Auto-generated constructor stub
+		this.name = name;
+		this.next_value =next_value;
+	}
 	public String getName() {
 		return name;
 	}

@@ -94,7 +94,7 @@ public class UserBookDaoImpl implements UserBookDao{
 	@Override
 	public List<Rentable> getAllOutDate(String userid) {
 		// TODO Auto-generated method stub
-		String hql = "FROM Rentable u WHERE u.id in (SELECT b.bookid FROM BookOwner b"
+		String hql = "FROM Rentable u WHERE u.id in (SELECT b.bookid FROM BookOwner b "
 				+ "WHERE b.userid =? and b.logid <>0)";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setString(0, userid);

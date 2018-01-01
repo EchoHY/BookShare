@@ -39,7 +39,7 @@ public class SaleServiceImpl implements SaleService{
 	@Override
 	public boolean dealConfirm(int bookid, int sureornot) {
 		// TODO Auto-generated method stub
-		return false;
+		return saleDao.dealConfirm(bookid,sureornot);
 	}
 
 	@Override

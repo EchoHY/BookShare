@@ -10,27 +10,21 @@ public class Worthless {
 	//序号：当书被报废时，所在记录从上表移到此表，序号依然沿用。
 	@Id
 	private int id;
-	
 	//书名：从表一复制
 	@Column(length = 32)
 	private String name;
-	
 	//书的图片:从表一复制
 	@Column(length = 64)
 	private String picture;
-	
 	//书的信息:从表一复制
 	@Column(length = 32)
 	private String information;
-	
 	//报废时间:书被报废时，读取服务器时间
 	@Column(length = 32)
 	private long worthless_time;
-
 	//原主人（的手机号）:从表一复制
 	@Column(length = 32)
 	private String origin_tel;
-
 	public int getId() {
 		return id;
 	}

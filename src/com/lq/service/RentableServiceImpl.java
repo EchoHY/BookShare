@@ -1,4 +1,5 @@
 package com.lq.service;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,14 +60,14 @@ public class RentableServiceImpl implements RentableService{
 	}
 	
 	@Override
-	public Isbn getBookInfo(int index) {
+	public Isbn getBookInfo(String isbn) {
 		// TODO Auto-generated method stub
-		return rentableDao.getBookInfo(index);
+		return rentableDao.getBookInfo(isbn);
 	}
 	@Override
-	public boolean updateRentableId(int bookid) {
+	public boolean updateRentableWay(int bookid,int way) {
 		// TODO Auto-generated method stub
-		return rentableDao.updateRentableId(bookid);
+		return rentableDao.updateRentableWay(bookid,way);
 	}
 	@Override
 	public int getGeneratorId() {
@@ -77,5 +78,31 @@ public class RentableServiceImpl implements RentableService{
 	public boolean updateGeneratorId(int id) {
 		// TODO Auto-generated method stub
 		return rentableDao.updateGeneratorId(id);
+	}
+	@Override
+	public List<Rentable> getRentableWayBelowZero(String userid) {
+		// TODO Auto-generated method stub
+		return rentableDao.getRentableWayBelowZero(userid);
+	}
+	@Override
+	public boolean moveRentabletoStop(int bookid) {
+		// TODO Auto-generated method stub
+		return rentableDao.moveRentabletoStop(bookid);
+	}
+	@Override
+	public boolean moveRentableFromStop(int bookid) {
+		// TODO Auto-generated method stub
+		return rentableDao.moveRentableFromStop(bookid);
+	}
+	@Override
+	public boolean updateRentableInfo(int bookid, String picPath,
+			BigDecimal rent_price, BigDecimal sale_price, int way) {
+		// TODO Auto-generated method stub
+		return rentableDao.updateRentableInfo(bookid,picPath,rent_price,sale_price,way);
+	}
+	@Override
+	public Long getRentableLen() {
+		// TODO Auto-generated method stub
+		return rentableDao.getRentableLen();
 	}
 }

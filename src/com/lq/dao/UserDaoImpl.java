@@ -1,9 +1,12 @@
 package com.lq.dao;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+
 import com.lq.entity.User;
 @Repository
 public class UserDaoImpl implements UserDao{
@@ -21,10 +24,13 @@ public class UserDaoImpl implements UserDao{
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getALLUser() {
 		// TODO Auto-generated method stub
-		return null;
+		String hql = "from User";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);		
+		return query.list();
 	}
 
 	@Override

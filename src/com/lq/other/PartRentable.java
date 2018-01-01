@@ -12,17 +12,18 @@ public class PartRentable{
 	@Column(length = 32)
 	private String picture;
 	private int way;
-	@Column(length = 32)
 	private BigDecimal rent_price;
-	@Column(length = 32)
 	private BigDecimal sale_price;
+	@Column(length = 32)
+	private String title;
 	public PartRentable(){}
-	public PartRentable(int id,String picture,int way,BigDecimal rent_price,BigDecimal sale_price){
+	public PartRentable(int id,String picture,int way,BigDecimal rent_price,BigDecimal sale_price,String title){
 			this.id = id;
 			this.picture = picture;
 			this.way = way;
 			this.rent_price =  rent_price;
 			this.sale_price = sale_price;
+			this.title = title;
 	}
 	public int getId() {
 		return id;
@@ -54,4 +55,11 @@ public class PartRentable{
 	public void setSale_price(BigDecimal sale_price) {
 		this.sale_price = sale_price;
 	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
 }

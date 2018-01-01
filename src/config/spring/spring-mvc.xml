@@ -31,11 +31,11 @@
 	<!-- 定义拦截器 -->
 	
     <!-- 定义视图解析器 -->
-    <bean id="viewResolver"
+    <!--<bean id="viewResolver"
         class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/"></property>
-        <property name="suffix" value=".jsp"></property>
-    </bean>
+        <property name="suffix" value=".jsp"></property>  
+    </bean>-->
     <!-- 处理文件上传 -->
 
 </beans>  

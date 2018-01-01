@@ -19,7 +19,7 @@ public class RentedServiceImpl implements RentedService{
 	@Override
 	public List<Rented> getRented(String userid) {
 		// TODO Auto-generated method stub
-		return null;
+		return rentedDao.getRented(userid);
 	}
 	@Override
 	public Rented getOneRented(int id) {
