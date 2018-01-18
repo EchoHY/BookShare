@@ -41,4 +41,9 @@ public class RentedServiceImpl implements RentedService{
 		// TODO Auto-generated method stub
 		return rentedDao.getRentedwithoutConfirm(books);
 	}
+	@Override
+	public boolean updateRented(int bookid,long begin_time, long end_time,int sureornot, String picture) {
+		// TODO Auto-generated method stub
+		return rentedDao.updateRented(bookid,begin_time,end_time,sureornot,picture);
+	}
 }

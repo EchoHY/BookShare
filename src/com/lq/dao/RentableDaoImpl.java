@@ -107,7 +107,7 @@ public class RentableDaoImpl implements RentableDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PartRentable> getPartRentables(int startlocation, int size) {
-		String hql = "select new PartRentable(u.id,u.picture,u.way,u.rent_price,u.sale_price,t.title) "
+		String hql = "select new PartRentable(u.id,t.picture,u.way,u.rent_price,u.sale_price,t.title) "
 				+ "FROM Rentable u,Isbn t WHERE u.information = t.isbn and u.way>0 order by u.start_time";
 		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
@@ -207,6 +207,27 @@ public class RentableDaoImpl implements RentableDao{
 		String hql = "SELECT COUNT(*) FROM Rentable";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		return (Long)query.uniqueResult();
+	}
+	@Override
+	public boolean updateRentableWayToMinus(int bookid) {
+		// TODO Auto-generated method stub
+		String hql = "select b.way from Rentable b WHERE b.id =?";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setInteger(0, bookid);
+	    String hql2 = "update Rentable u set u.way= ?where u.id = ?";
+		Query query2 = sessionFactory.getCurrentSession().createQuery(hql2);
+		query2.setInteger(0, (Integer)query.uniqueResult()*-1);
+		query2.setInteger(1, bookid);
+		return (query2.executeUpdate()>0);
+	}
+	@Override
+	public Rentablestop getOneRentableStop(int bookid) {
+		// TODO Auto-generated method stub
+		String hql = "FROM Rentablestop u Where u.id=? ";
+		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setInteger(0, bookid);
+		return (Rentablestop)query.uniqueResult();
 	}
 
 }

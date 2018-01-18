@@ -65,7 +65,7 @@ public class UserBookDaoImpl implements UserBookDao{
 	@Override
 	public List<Sale> getAllSale(String userid) {
 		// TODO Auto-generated method stub
-		String hql = "FROM Sale u WHERE u.id in (SELECT b.bookid FROM BookOwner b WHERE b.userid= ?)";
+		String hql = "FROM Sale u WHERE u.sureornot = 1 and u.id in (SELECT b.bookid FROM BookOwner b WHERE b.userid= ?)";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setString(0, userid);
 		return query.list();
@@ -74,7 +74,7 @@ public class UserBookDaoImpl implements UserBookDao{
 	@Override
 	public List<Rented> getAllRented(String userid) {
 		// TODO Auto-generated method stub
-		String hql = "FROM Rented u WHERE u.id in (SELECT b.bookid FROM BookOwner b WHERE b.userid= ?)";
+		String hql = "FROM Rented u WHERE u.sureornot = 1 and u.id in (SELECT b.bookid FROM BookOwner b WHERE b.userid= ?)";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setString(0, userid);
 		return query.list();

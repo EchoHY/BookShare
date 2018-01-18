@@ -2,7 +2,6 @@ package com.lq.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-//import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,15 +62,13 @@ public class BookInfoController{
 		 * */
 		@RequestMapping("/ofsearch")
 	    public void ofsearch(String keyword,HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
-	    	System.out.println(keyword);	    	
-	    	//String keyword1="";
-	    	//String keyword2="";
-	    	//String[] keywords = keyword.split(" ");
-			List<PartRentable> rentables = isbnService.getSearchInfo(keyword);
-			//rentables = isbnService.getSearchInfoByTwokey(keyword1,keyword2);
-			System.out.println(rentables.size());
-	    	response.setContentType("application/json");
-			String data = "{\"result\":"+ JSON.toJSONString(rentables) +"}";	
+	    	System.out.println(keyword);
+	    	String data = "{\"result\":\"fail\"}";	
+	    	if(keyword != ""){
+	    		List<PartRentable> rentables = isbnService.getSearchInCore(keyword);
+	    		data = "{\"result\":"+ JSON.toJSONString(rentables) +"}";
+	    	}	
+	    	response.setContentType("application/json");	
 			try{
 				PrintWriter out = response.getWriter();
 				out.write(data);
@@ -79,12 +76,19 @@ public class BookInfoController{
 				e.printStackTrace();				
 			}
 		}
+		/*
+		 * 未完成的方法
+		 * */
 		@RequestMapping("/ofcore")
 	    public void ofcore(String keyword,HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
 	    	System.out.println(keyword);	    	
 	    	//String keyword1="";
 	    	//String keyword2="";
 	    	//String[] keywords = keyword.split(" ");
+	    	List<String> isbns = isbnService.getSearchIsbn(keyword);
+	    	for(String string: isbns){
+	    		System.out.println(string);
+	    	}
 			List<PartRentable> rentables = isbnService.getSearchInCore(keyword);
 			//rentables = isbnService.getSearchInfoByTwokey(keyword1,keyword2);
 			System.out.println(rentables.size());

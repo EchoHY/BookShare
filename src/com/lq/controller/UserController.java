@@ -6,15 +6,20 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.lq.entity.BookOwner;
 import com.lq.entity.Isbn;
 import com.lq.entity.Rentable;
+import com.lq.entity.Rentablestop;
 import com.lq.entity.Rented;
 import com.lq.entity.Sale;
 import com.lq.entity.TradeLog;
@@ -23,6 +28,7 @@ import com.lq.service.RentableService;
 import com.lq.service.RentedService;
 import com.lq.service.SaleService;
 import com.lq.service.UserService;
+import com.util.Valuable;
 @Controller
 @RequestMapping("/user")
 public class UserController{
@@ -59,7 +65,7 @@ public class UserController{
 				
 			String data = "{\"phone\":\""+""+"\",\"fail\":\""+1+"\"}";
 			if(userService.getOneUserInfo(userid) != null){
-				data = "{\"phone\":\""+userService.getOneUserInfo(userid).getPhone()+"\",\"fail\":\""+0+"\"}";
+				data = "{\"phone\":"+userService.getOneUserInfo(userid).getPhone()+",\"fail\":\""+0+"\"}";
 			}
 			try{
 				PrintWriter out = response.getWriter();
@@ -75,14 +81,15 @@ public class UserController{
 		 * */
 		@RequestMapping("/getUserInfo")
 		public void getUserInfo(String userid,HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
-			
-			String data = "{\"result\":\"\",\"status\":\""+0+"\"}";
+			int status = 1;
+			String data = "{\"result\":\"\",\"status\":"+status+"}";
 			if(userService.getOneUserInfo(userid) != null){
-				data = "{\"result\":\""+JSON.toJSONString(userService.getOneUserInfo(userid))+"\",\"status\":\""+1+"\"}";
-			}else{
-				User user = new User();
-				user.setId(userid);
-				userService.addUser(user);	
+				User user = userService.getOneUserInfo(userid);
+				if(user.getGrade()==null&&user.getPhone()==null&&user.getSex()==null){
+					status = 0;
+				}
+				System.out.println(user.getPhone());
+				data = "{\"result\":"+JSON.toJSONString(userService.getOneUserInfo(userid))+",\"status\":"+status+"}";
 			}
 			try{
 				PrintWriter out = response.getWriter();
@@ -98,25 +105,17 @@ public class UserController{
 		 * */
 		@RequestMapping("/complementInfo")
 		public void complementInfo(String userid,String phone,String grade,String sex,HttpServletRequest request,HttpServletResponse response){	
-			/*
-			 * 检查是否有这个用户，若有补全用户信息
+			/* 检查是否有这个用户，若有补全用户信息
 			 * 转账+补全完个人信息后，提供给买家/租赁者 书持有者的联系方式
 			 * */
-			
-			String data = "{\"result\":fail}";	
-			System.out.println(userid);
-			System.out.println(sex);
-			System.out.println(grade);
-			System.out.println(phone);
+			System.out.println(userid+" : "+phone+" : "+grade+" : "+sex);
+			String data = "{\"result\":\"fail\"}";	
 			if(userService.getOneUserInfo(userid)!=null){
 				userService.updateUserInfo(userid, phone, grade, sex);
+				data = "{\"result\":\"success\"}";
 			}else {
 				userService.addUser(new User(userid));
 			}
-			/*String bookowner = userService.getBookOwner(bookid).getUserid();
-			String bookownertel = userService.getOneUserInfo(bookowner).getPhone();
-			data = "{\"result\":"+ bookownertel +"}";
-			*/
 			try{
 				PrintWriter out = response.getWriter();
 				out.write(data);
@@ -131,8 +130,6 @@ public class UserController{
 		 * */
 		@RequestMapping("/viewBookinhand")
 	    public void userbook(String userid,HttpServletRequest request,HttpServletResponse response) {
-			
-			//String[] userbook = {"","","",""};
 			//我买进的图书，终止关系
 			String bought = JSON.toJSONString(userService.getAllSale(userid));
 			//我正在租用的图书，租用关系，还剩天数-->提醒续借
@@ -150,72 +147,66 @@ public class UserController{
 				e.printStackTrace();				
 			}
 		}		
-		/*
-		 * author 	lmr
+		/* author 	lmr
 		 * time		2017/12/23
 		 * function 查看图书分享日志
 		 * */
 		@RequestMapping("/viewsharelog")
 	    public void sharelog(String userid,HttpServletRequest request,HttpServletResponse response) {
-			/*
-			 * 卖出去的书-终止关系即书的生命终结
+			/* 卖出去的书-终止关系即书的生命终结
 			 * 出租出去的书-停止分享/恢复分享
 			 * */
 		    List<Integer> books = userService.getBooksfromFormer(userid);
-		    Map<Integer, List<TradeLog>> logmap = new HashMap<Integer,List<TradeLog>>();
-		    Map<Integer, Integer> bookstatus = new HashMap<>();
-		    Map<Integer, Isbn> bookinfo = new HashMap<>();
-		    //HashSet<E>
+		    System.out.println(userid+"上传了"+books.size()+"本书");
+		    Map<String, List<TradeLog>> logmap = new HashMap<>();
+		    Map<String, Integer> bookstatus = new HashMap<>();
+		    Map<String, Isbn> bookinfo = new HashMap<>();
 		    List<TradeLog> logs = null;
+		    Isbn info = null;
 		    for(Integer bookid : books){
 		    	//按照降序排列
-		    	
-		    	Isbn info = null;
 		    	Rentable rentable = rentableService.getOneRentable(bookid);
 		    	Rented rented = rentedService.getOneRented(bookid);
 		    	Sale sale = saleService.getOneSale(bookid);
+		    	Rentablestop rentablestop = rentableService.getOneRentableStop(bookid);
 		    	if(rentable!=null){
 		    		info = rentableService.getBookInfo(rentable.getInformation());
 		    	}else if(rented!=null){
 		    		info = rentableService.getBookInfo(rented.getInformation());
 		    	}else if(sale!=null){
 		    		info = rentableService.getBookInfo(sale.getInformation());
+		    	}else if(rentablestop!=null){
+		    		info = rentableService.getBookInfo(rentablestop.getInformation());
 		    	}else{
 		    		info = null;
 		    	}
+		    	if(info!=null)
+		    	System.out.println(info);
+		    	bookinfo.put(bookid.toString(), info);
+		    	if(bookinfo.get(bookid.toString())!=null)
+		    	System.out.println(bookinfo.get(bookid.toString()).getIsbn());
 		    	logs = userService.getlogsByuserandbookid(userid, bookid);
 		    	if(logs!=null&logs.size()>0){
-		    		TradeLog latestlog = logs.get(logs.size()-1);
+		    		TradeLog latestlog = logs.get(0);
 			    	int way = latestlog.getWay();
 			    	long nowtime = latestlog.getDeal_time()+latestlog.getPeriod()*24*60*60*1000;
 			    	if(way == 2){
-			    		/*已经售出，它已经售出了
-			    		 * */
-			    		bookstatus.put(bookid, 0);
+			    		bookstatus.put(bookid.toString(), 0);/*已经售出，它已经售出了*/
 			    	}else if(way == 0){
-						/*处于停止分享状态
-						 * */
-			    		bookstatus.put(bookid, 1);
-					}else if(way ==1 && nowtime>System.currentTimeMillis() ){
-						/*正在被租用状态
-						 * */
-			    		bookstatus.put(bookid, 2);
+			    		bookstatus.put(bookid.toString(), 1);/*处于停止分享状态*/
+					}else if(way ==1 && (nowtime>System.currentTimeMillis()) ){
+			    		bookstatus.put(bookid.toString(), 2);/*正在被租用状态*/
+					}else{
+						bookstatus.put(bookid.toString(), 3);/*处于空闲状态*/
 					}
-					else{
-						/*处于空闲状态
-						 * */
-						bookstatus.put(bookid, 3);
-					}
-		    	}else{
-		    		/*这种情况不可能存在，编写此处代码纯粹为了预防后期的更改业务造成的异常，500表示异常
+		    	}else{/*这种情况不可能存在，编写此处代码纯粹为了预防后期的更改业务造成的异常，500表示异常
 		    		 * */
-		    		bookstatus.put(bookid, 500);
+		    		bookstatus.put(bookid.toString(), 500);
 		    	}
-		    	logmap.put(bookid, logs);
-		    	bookinfo.put(bookid, info);
+		    	logmap.put(bookid.toString(), logs);	
 		    }
 			response.setContentType("application/json");
-			String data = "{\"logmap\":"+ JSON.toJSONString(logmap) +",\"bookstatus\":"+JSON.toJSONString(bookstatus)+",\"bookinfo\":"+JSON.toJSONString(bookinfo)+"}";	
+			String data = "{\"logmap\":"+ JSON.toJSONString(logmap) +",\"bookstatus\":"+JSON.toJSONString(bookstatus)+",\"bookinfo\":"+JSON.toJSONString(bookinfo,SerializerFeature.DisableCircularReferenceDetect)+"}";	
 			try{
 				PrintWriter out = response.getWriter();
 				out.write(data);
@@ -233,7 +224,7 @@ public class UserController{
 			/*在出租表中说明书正处于被租借状态，此时原主人不可要回，返回状态码0
 			 * status 为状态码
 			 * */
-			int way = 0;
+			System.out.println(bookid);
 			int status = 0;
 			String data = "{\"status\":\""+status+"\",\"result\":\"The book is by renting now\"}";
 			if(saleService.getOneSale(bookid) !=null){
@@ -241,16 +232,13 @@ public class UserController{
 			}
 			else if(rentedService.getOneRented(bookid)==null){
 				/* 不在出租表中说明处于空闲期间
-				 * 返回书现持有者的手机号码
-				 * */
+				 * 返回书现持有者的手机号码*/
 				status = 1;
 				String nowUser = userService.getBookOwner(bookid).getUserid();
 				String phone = userService.getOneUserInfo(nowUser).getPhone();
 				data = "{\"status\":\""+status+"\",\"result\":"+phone+"}";
-				/*way =0 ,代表书不可租不可售,此时书在列表中处于不可租售状态
-				 * */
-				way = rentableService.getOneRentable(bookid).getWay();
-				rentableService.updateRentableWay(bookid,-1*way);
+				/*way取负 ,代表书处于不可租售状态，再次取反即可恢复原来状态*/
+				rentableService.updateRentableWayToMinus(bookid);
 			}
 			try{
 				PrintWriter out = response.getWriter();
@@ -288,8 +276,7 @@ public class UserController{
 			 * status 为状态码
 			 * */
 			int status = 0;
-			int way = rentableService.getOneRentable(bookid).getWay();
-			rentableService.updateRentableWay(bookid,-1*way);
+			rentableService.updateRentableWayToMinus(bookid);
 			String data = "{\"status\":\""+status+"\",\"result\":\"success\"}";
 			try{
 				PrintWriter out = response.getWriter();
@@ -337,9 +324,10 @@ public class UserController{
 			boolean sellbtn   = Boolean.parseBoolean(request.getParameter("sellbtn"));
 			String  onlycode  = request.getParameter("onlycode");
 			String filetype   = ".jpg";//判断上传图片格式需要做
-			String picName 	  = "OpenId" + "fir" + onlycode + filetype;//onlycode 作为图片名字一部分
-			String ip         = "localhost:8082/";
-			String path       = "http://"+ip+"image/";//就有一个问题图片的路径怎么对应上URL
+			String picName 	  = "OpenId"+onlycode +filetype;//onlycode 作为图片名字一部分
+			//String ip         = "http://115.159.24.14/";
+			//String ip = "http://192.168.3.140:8082/";
+			String path       = Valuable.getIp()+"image/";//就有一个问题图片的路径怎么对应上URL
 			String picPath    = path+picName;
 			String rent_price = request.getParameter("rent_price");
 			String sale_price = request.getParameter("sale_price");	
@@ -355,12 +343,17 @@ public class UserController{
 			else 					way = 0;
 			/*开始注册图书，书序号手动设置
 			 * */
-			rentableService.moveRentableFromStop(bookid);
-			rentableService.updateRentableInfo(bookid, picPath,new BigDecimal(rent_price).setScale(1, BigDecimal.ROUND_HALF_UP),new BigDecimal(sale_price).setScale(1, BigDecimal.ROUND_HALF_UP),way);
-			userService.addBookOwner(new BookOwner(bookid,userid,0));
-			/*注册图书完成
-			 * */
-			String data = "{\"result\":\"success\"}";
+			String data = "{\"result\":\"fail\"}";
+			if(rentableService.getOneRentableStop(bookid)!=null){
+				/*图书信息恢复完成 */
+				BigDecimal money = new BigDecimal(0).setScale(1, BigDecimal.ROUND_HALF_UP);
+				TradeLog tradeLog  = new TradeLog(System.currentTimeMillis(),0,-1,userid,userid,money); 
+				rentableService.moveRentableFromStop(bookid);
+				rentableService.updateRentableInfo(bookid, picPath,new BigDecimal(rent_price).setScale(1, BigDecimal.ROUND_HALF_UP),new BigDecimal(sale_price).setScale(1, BigDecimal.ROUND_HALF_UP),way);
+				userService.addBookOwner(new BookOwner(bookid,userid,0));
+				userService.addlogandformer(tradeLog,userid,bookid);
+				data = "{\"result\":\"success\"}";
+			}
 			try{
 				PrintWriter out = response.getWriter();
 				out.write(data);
@@ -368,5 +361,4 @@ public class UserController{
 				e.printStackTrace();				
 			}
 		}
-		
 }	

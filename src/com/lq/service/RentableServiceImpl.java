@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.lq.entity.Isbn;
 import com.lq.entity.Rentable;
+import com.lq.entity.Rentablestop;
 import com.lq.other.PartRentable;
 import com.lq.dao.RentableDao;
 @Service
@@ -104,5 +105,15 @@ public class RentableServiceImpl implements RentableService{
 	public Long getRentableLen() {
 		// TODO Auto-generated method stub
 		return rentableDao.getRentableLen();
+	}
+	@Override
+	public boolean updateRentableWayToMinus(int bookid) {
+		// TODO Auto-generated method stub
+		return rentableDao.updateRentableWayToMinus(bookid);
+	}
+	@Override
+	public Rentablestop getOneRentableStop(int bookid) {
+		// TODO Auto-generated method stub
+		return rentableDao.getOneRentableStop(bookid);
 	}
 }

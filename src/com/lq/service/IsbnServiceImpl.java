@@ -34,5 +34,20 @@ public class IsbnServiceImpl implements IsbnService{
 		// TODO Auto-generated method stub
 		return isbndao.getSearchInCore(keyword);
 	}
+	@Override
+	public List<String> getSearchIsbn(String keyword) {
+		// TODO Auto-generated method stub
+		return isbndao.getSearchIsbn(keyword);
+	}
+	@Override
+	public List<PartRentable> getSearchOrderByKeys(List<String> isbns) {
+		// TODO Auto-generated method stub
+		return isbndao.getSearchOrderByKeys(isbns);
+	}
+	@Override
+	public List<PartRentable> getSearchOrderByKey(String isbnstr) {
+		// TODO Auto-generated method stub
+		return isbndao.getSearchOrderByKey(isbnstr);
+	}
 	
 }

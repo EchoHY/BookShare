@@ -1,6 +1,5 @@
 package com.lq.service;
 import java.util.List;
-
 import com.lq.entity.Isbn;
 import com.lq.other.PartRentable;
 public interface IsbnService {
@@ -9,4 +8,7 @@ public interface IsbnService {
 	public List<PartRentable> getSearchInfo(String keyword);
 	public List<PartRentable> getSearchInCore(String keyword);
 	public List<PartRentable> getSearchInfoByTwokey(String keyword,String keyword2);
+	public List<String> getSearchIsbn(String keyword);
+	public List<PartRentable> getSearchOrderByKeys(List<String> isbns);
+	public List<PartRentable> getSearchOrderByKey(String isbnstr);
 }

@@ -36,7 +36,7 @@ public class UserBookLogDaoImpl implements UserBookLogDao{
 	@Override
 	public List<Integer> getBooksfromFormer(String userid) {
 		// TODO Auto-generated method stub
-		String hql = "SELECT u.bookid FROM Former u Where u.userid=?";
+		String hql = "SELECT DISTINCT bookid FROM Former  Where userid=?";
 		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setString(0, userid);

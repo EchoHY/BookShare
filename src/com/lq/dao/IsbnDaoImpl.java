@@ -30,9 +30,6 @@ public class IsbnDaoImpl implements IsbnDao{
 	@Override
 	public List<PartRentable> getSearchInfo(String keyword) {
 		// TODO Auto-generated method stub 
-		/*,(length(title)-length("+keyword+")) as rn1,(length(author)-length("+keyword+")) as rn2,(length(subtitle)-length("+keyword+")) as rn3,(length(keyword)-length("+keyword+")) as rn4,(length(publisher)-length("+keyword+")) as rn5 
-		 order by rn1,rn2,rn3,rn4,rn5
-		 * */
 		String hql= "select new PartRentable(u.id,u.picture,u.way,u.rent_price,u.sale_price,t.title) from Rentable u,Isbn t where u.information = t.isbn and u.information in( select isbn "
 				+ "from Isbn where  title like '%"+keyword+"%' or subtitle like '%"+keyword+"%' or author like '%"+keyword+"%' or publisher like '%"+keyword+"%' or keyword like '%"+keyword+"%' )";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
@@ -40,26 +37,57 @@ public class IsbnDaoImpl implements IsbnDao{
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PartRentable> getSearchInfoByTwokey(String keyword,String keyword2){
+	public List<PartRentable> getSearchInCore(String keyword) {
 		// TODO Auto-generated method stub
-		String hql= "select new PartRentable(u.id,u.picture,u.way,u.rent_price,u.sale_price,t.title) from Rentable u,Isbn t where u.information = t.isbn and u.information "
-				+ "in(select isbn,length(title) as r1,length(author) as r2,length(keyword) as r3,length(publisher) as r4,length(subtitle) as r5,length("+keyword+")) as k1,length("+keyword2+")) as k2 "
-				+ "from Isbn where title like '%"+keyword+"%' or subtitle like '%"+keyword+"%' or author like '%"+keyword2+"%' or publisher like '%"+keyword2+"%' or keyword like '%"+keyword2+"%' "
-				+ "order by (r1-k1+r3-k2),(r2-k1+r3-k2),(r1-k1+r4-k2), (r2-k1+r4-k2),(r1-k1+r5-k2),(r2-k1+r5-k2))";
+		String hql= "select new PartRentable(u.id,t.picture,u.way,u.rent_price,u.sale_price,t.title) from Rentable u,Isbn t where u.information = t.isbn and u.information in( "
+				+ "select isbn from Isbn where title like :key or subtitle like :key or author like :key or publisher like :key or keyword like :key)"
+				+ "order by length(t.title),t.author,t.pubdate,u.way";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("key", "%"+keyword+"%");
 		return query.list();
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PartRentable> getSearchInCore(String keyword) {
+	public List<PartRentable> getSearchInfoByTwokey(String keyword,String keyword2){
 		// TODO Auto-generated method stub
-		/*,(length(title)-length("+keyword+")) as rn1,(length(author)-length("+keyword+")) as rn2,(length(subtitle)-length("+keyword+")) as rn3,(length(keyword)-length("+keyword+")) as rn4,(length(publisher)-length("+keyword+")) as rn5 
-		 order by rn1,rn2,rn3,rn4,rn5
-		 * */
-		int length = keyword.length();
-		String hql= "select new PartRentable(u.id,u.picture,u.way,u.rent_price,u.sale_price,t.title) from Rentable u,Isbn t where u.information = t.isbn and u.information in( select isbn,(length(title) as rn1 "
-				+ "from Isbn where  title like '%"+keyword+"%' or subtitle like '%"+keyword+"%' or author like '%"+keyword+"%' or publisher like '%"+keyword+"%' or keyword like '%"+keyword+"%' order by (rn1-"+length+") ";
+		String hql= "select new PartRentable(u.id,t.picture,u.way,u.rent_price,u.sale_price,t.title) from Rentable u,Isbn t where u.information = t.isbn and u.information in( "
+				+ "select isbn from Isbn where (title like :key and author like :key2) or (author like :key  and publisher like :key2) or (keyword like :key and  like :key2) "
+				+ "order by t.title,t.author,t.pubdate,u.way";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("key", "%"+keyword+"%");
+		query.setParameter("key2", "%"+keyword2+"%");
+		return query.list();
+	}
+	
+	/*
+	 * 以下是未完成的扩展检索方法
+	 * */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getSearchIsbn(String keyword) {
+		// TODO Auto-generated method stub
+		String hql = "select isbn from Isbn where title like :key or subtitle like :key or author like :key or publisher like :key or keyword like :key "
+				+ "order by length(title) ";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("key", "%"+keyword+"%");
+		return query.list();
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PartRentable> getSearchOrderByKeys(List<String> isbns) {
+		// TODO Auto-generated method stub
+		String hql= "select new PartRentable(u.id,u.picture,u.way,u.rent_price,u.sale_price,t.title) from Rentable u,Isbn t where u.information = t.isbn and u.information = (:keys)";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameterList("keys", isbns);
+		return query.list();
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PartRentable> getSearchOrderByKey(String isbnstr) {
+		// TODO Auto-generated method stub
+		String hql= "select new PartRentable(u.id,u.picture,u.way,u.rent_price,u.sale_price,t.title) from Rentable u,Isbn t where u.information = (:keys)";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("keys", isbnstr);
 		return query.list();
 	}
 	

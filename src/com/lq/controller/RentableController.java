@@ -5,9 +5,11 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.alibaba.fastjson.JSON;
 import com.lq.entity.BookOwner;
 import com.lq.entity.Isbn;
 import com.lq.entity.Rentable;
@@ -37,9 +39,7 @@ public class RentableController{
 			 * 若没有注册过，注册该用户，补充该用户的手机号
 			 * */
 			String userid = request.getParameter("userid");
-			System.out.println(userid);
 			String origin_tel = request.getParameter("origin_tel");
-			System.out.println(origin_tel);
 			if(userService.getOneUserInfo(userid)==null){
 				User user = new User();
 				user.setId(userid);
@@ -59,10 +59,10 @@ public class RentableController{
 			 * similar-> "http://api.jisuapi.com/isbn/upload/20161010/174050_28792.jpg"
 			 * */
 			String filetype   = ".jpg";//判断上传图片格式需要做
-			String picName = "OpenId" +onlycode + filetype;//onlycode 作为图片名字一部分
-			//String fileName = "OpenId"+onlycode +filetype;
-			String ip         = "192.168.1.107:8082/";
-			String path       = "http://"+ip+"image/";//就有一个问题图片的路径怎么对应上URL
+			String picName 	  = "OpenId"+onlycode +filetype;//onlycode 作为图片名字一部分
+			//String ip         = "http://115.159.24.14/";
+			//String ip = "http://192.168.3.140:8082/";
+			String path       = Valuable.getIp()+"image/";//就有一个问题图片的路径怎么对应上URL
 			String picPath    = path+picName;
 			String information= request.getParameter("isbn");
 			String rent_price = request.getParameter("rent_price");
@@ -104,9 +104,7 @@ public class RentableController{
 			/* 向数据库isbn表查询是否有存在该书的信息
 			 * */
 			response.setContentType("application/json");
-			//应该可以通过一种方式把map转换成JSON数据
 			String data = "{\"result\":\"exist\"}";	
-			System.out.println(information);
 			if(isbnService.getOneIsbninfor(information)==null){	
 				data = "{\"isbn\":\""+information+"\"}";	
 			}			  
@@ -133,12 +131,16 @@ public class RentableController{
 		 * function 用户撤回上传的仍在自己手上的图书，删除持有者关系记录，删除书表记录
 		 * */
 		@RequestMapping("/cancel")
-	    public void cacelregister(int bookid,HttpServletRequest request,HttpServletResponse response) {
-			String data = "{\"result\":\"book does't exist\"}";	
+	    public void cacelregister(int bookid,String userid,HttpServletRequest request,HttpServletResponse response) {
+			String data = "{\"result\":\"book does't exist\"}";
+			System.out.println(bookid+" : "+userid);
 			if(rentableService.getOneRentable(bookid)!=null){
 				userService.delBookOwner(bookid);
 				rentableService.delRentable(bookid);
-				data = "{\"result\":\"cacel success\"}";	
+				String rentable = JSON.toJSONString(userService.getAllRentable(userid));
+				response.setContentType("application/json");
+				data = "{\"rentable\":"+ rentable +"}";	
+
 			}
 			try{
 				PrintWriter out = response.getWriter();

@@ -3,6 +3,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,9 +12,11 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,7 @@ public class FileUploadController implements ServletContextAware{
 		ServletFileUpload upload = null;
 		//获取文件需要上传的路径
 		String path = "R:\\image";
+		//String path = "/usr/image";
 		File dir = new File(path);
 		if(!dir.exists()){
 			dir.mkdir();
@@ -56,7 +60,6 @@ public class FileUploadController implements ServletContextAware{
 			//[]说明upload.parseRequest(request)没有产生信息
 			@SuppressWarnings("unchecked")
 			List<FileItem> list = upload.parseRequest(request);
-			//String onlycode = request.getParameter("onlycode");
 			//null已经被解析过,获取不到传参
 			for(FileItem item : list){
 				//获取表单的属性名字

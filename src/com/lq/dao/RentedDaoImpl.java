@@ -71,4 +71,17 @@ public class RentedDaoImpl implements RentedDao{
 		query.setParameterList("alist", books);
 		return query.list();
 	}
+
+	@Override
+	public boolean updateRented(int bookid,long begin_time, long end_time,int sureornot,String picture) {
+		// TODO Auto-generated method stub
+		String hql = "update Rented u set u.picture=?,u.begin_time=?,u.end_time=?,u.sureornot=?where u.id=?";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setString(0, picture);
+		query.setLong(1, begin_time);
+		query.setLong(2, end_time);
+		query.setInteger(3, sureornot);
+		query.setInteger(4, bookid);
+		return (query.executeUpdate()>0);
+	}
 }

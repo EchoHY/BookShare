@@ -21,7 +21,7 @@
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
         <!-- 换成自己的数据库路径 -->
-        <property name="url" value="jdbc:mysql://localhost/mydb?useUnicode=true&amp;
+        <property name="url" value="jdbc:mysql://172.17.0.6/mydb?useUnicode=true&amp;
         characterEncoding=utf-8&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;useSSL=false">
         </property>
         <property name="username" value="root"></property>

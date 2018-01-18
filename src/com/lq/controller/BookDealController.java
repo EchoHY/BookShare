@@ -19,6 +19,7 @@ import com.lq.service.RentableService;
 import com.lq.service.RentedService;
 import com.lq.service.SaleService;
 import com.lq.service.UserService;
+import com.util.Valuable;
 @Controller
 @RequestMapping("/bookdeal")
 /*author lmr
@@ -206,7 +207,6 @@ public class BookDealController{
 					}
 				}
 			}
-			
 			String data = "{\"status\":"+status+"}";
 			try{
 				PrintWriter out = response.getWriter();
@@ -218,7 +218,45 @@ public class BookDealController{
 		/*
 		 * author 	lmr
 		 * time		2017/12/23
-		 * function 租用者续借书籍
+		 * function 租用者在租期内续借书籍
+		 * */
+		@RequestMapping("/reRentintime")
+	    public void addRentTwo(String userid,int bookid,int period,String onlycode,HttpServletRequest request,HttpServletResponse response) {
+			/*调用支付接口，生成交易日志log，添加former，更新bookowner的日志序号，跳转更新图片
+			 * 先调用支付接口，再调用续借业务
+			 * */
+			System.out.println("进来了");
+			System.out.println(bookid);
+			int sureornot = 1;
+			int now_way = 1;
+			Rented rented = rentedService.getOneRented(bookid);
+			long begin_time = System.currentTimeMillis();
+			long end_time = rented.getEnd_time()+period*24*60*60*1000;			
+			BigDecimal monney = rented.getRent_price().multiply(new BigDecimal(period));
+			String filetype   = ".jpg";//判断上传图片格式需要做
+			String picName 	  = "OpenId" +onlycode + filetype;
+			//String ip = "http://192.168.3.140:8082/";
+			//String ip         = "http://115.159.24.14/";
+			String path       = Valuable.getIp()+"image/";//就有一个问题图片的路径怎么对应上URL
+			String picture    = path+picName;
+			rentedService.updateRented(bookid,begin_time,end_time,sureornot,picture);
+			TradeLog tradeLog  = new TradeLog(begin_time,period,now_way,userid,userid,monney); 
+			userService.addlogandformer(tradeLog,userid,bookid);
+			userService.updateBookOwner(userid,bookid,tradeLog.getId());
+			rented.setEnd_time(end_time);
+			rented.setPicture(picture);	
+ 			String data = "{\"rented\":"+JSON.toJSONString(rented)+",\"log\":"+tradeLog.getId()+"}";	
+			try{
+				PrintWriter out = response.getWriter();
+				out.write(data);
+			}catch(IOException e){
+				e.printStackTrace();				
+			}
+		}
+		/*
+		 * author 	lmr
+		 * time		2017/12/23
+		 * function 租用者超过租期续借书籍
 		 * */
 		@RequestMapping("/reRent")
 	    public String addRent(String userid,int bookid,int period,HttpServletRequest request,HttpServletResponse response) {
@@ -236,7 +274,7 @@ public class BookDealController{
 			TradeLog tradeLog  = new TradeLog(begin_time,period,now_way,userid,userid,monney); 
 			userService.addlogandformer(tradeLog,userid,bookid);
 			userService.updateBookOwner(userid,bookid,tradeLog.getId());
-			String data = "{\"result\":\"rerentsuccess\",\"log\":"+tradeLog+"}";	
+			String data = "{\"result\":\"success\",\"log\":"+tradeLog+"}";	
 			try{
 				PrintWriter out = response.getWriter();
 				out.write(data);
@@ -252,21 +290,22 @@ public class BookDealController{
 		 * */
 		@RequestMapping("/updatepic")
 	    public void updatepic(int bookid,HttpServletRequest request,HttpServletResponse response) {
-			
+			System.out.println("进来了");
+			System.out.println(bookid);
 			String onlycode = request.getParameter("onlycode");
 			String filetype   = ".jpg";//判断上传图片格式需要做
-			String picName = "OpenId" +onlycode + filetype;
-			String ip         = "192.168.1.107:8082/";
-			String path       = "http://"+ip+"image/";//就有一个问题图片的路径怎么对应上URL
+			String picName 	  = "OpenId" +onlycode + filetype;
+			//String ip         = "http://115.159.24.14/";
+			//String ip = "http://192.168.3.140:8082/";
+			String path       = Valuable.getIp()+"image/";//就有一个问题图片的路径怎么对应上URL
 			String picture    = path+picName;
 			rentableService.updateRentable(bookid, picture);
-			String data = "{\"result\":\"updatepicsuccess\",\"path\":"+picture+"}";	
+			String data = "{\"rentable\":"+JSON.toJSONString(rentableService.getOneRentable(bookid))+"}";	
 			try{
 				PrintWriter out = response.getWriter();
 				out.write(data);
 			}catch(IOException e){
 				e.printStackTrace();				
 			}
-		}
-		
+		}	
 }	

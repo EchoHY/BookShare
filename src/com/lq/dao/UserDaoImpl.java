@@ -47,10 +47,10 @@ public class UserDaoImpl implements UserDao{
 	public boolean updateUserInfo(String userid, String phone, String grade,
 			String sex) {
 		// TODO Auto-generated method stub
-		String hql = "update User u set u.phone=?,u.grade=?,u.sex=?where u.id=?";
+		String hql = "update User u set u.grade=?,u.phone=?,u.sex=?where u.id=?";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-		query.setString(0, phone);
-		query.setString(1, grade);
+		query.setString(0, grade);
+		query.setString(1, phone);
 		query.setString(2, sex);
 		query.setString(3, userid);
 		return (query.executeUpdate()>0);
