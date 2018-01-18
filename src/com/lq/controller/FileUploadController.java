@@ -24,6 +24,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.ServletContextAware;
+
+import com.util.Valuable;
 @Controller
 @RequestMapping("/upload")
 public class FileUploadController implements ServletContextAware{
@@ -41,8 +43,9 @@ public class FileUploadController implements ServletContextAware{
 		DiskFileItemFactory factory = null;
 		ServletFileUpload upload = null;
 		//获取文件需要上传的路径
-		String path = "R:\\image";
+		//String path = "R:\\image";
 		//String path = "/usr/image";
+		String path = Valuable.getPath();
 		File dir = new File(path);
 		if(!dir.exists()){
 			dir.mkdir();
