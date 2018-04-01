@@ -1,9 +1,7 @@
 package com.lq.dao;
 import java.math.BigDecimal;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import com.lq.entity.Generator;
 import com.lq.entity.Isbn;
 import com.lq.entity.Rentable;
@@ -11,7 +9,6 @@ import com.lq.entity.Rentablestop;
 import com.lq.entity.Rented;
 import com.lq.entity.Sale;
 import com.lq.other.PartRentable;
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -35,7 +32,7 @@ public class RentableDaoImpl implements RentableDao{
 	@Override
 	public List<Rentable> getRentables(int startlocation, int size) {
 		String hql = "FROM Rentable order by start_time desc";
-		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
+		// 鏍规嵁闇�瑕佹樉绀虹殑淇℃伅涓嶅悓  灏�*鏇挎崲鎴愪笉鍚屽睘鎬э紝杩樻槸灏佽鎴愪竴涓被CommonInfo
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setMaxResults(size);
 		query.setFirstResult(startlocation);
@@ -50,7 +47,7 @@ public class RentableDaoImpl implements RentableDao{
 		return (query.executeUpdate()>0);
 	}
 	/*
-	 * 需要把rentable表中所有与rented重复的字段全部复制到new Rented中
+	 * 闇�瑕佹妸rentable琛ㄤ腑鎵�鏈変笌rented閲嶅鐨勫瓧娈靛叏閮ㄥ鍒跺埌new Rented涓�
 	 */
 	@Override
 	public boolean moveRentable(int index) {
@@ -66,7 +63,7 @@ public class RentableDaoImpl implements RentableDao{
     	return (query.executeUpdate()>0);
 	}
 	/*
-	 * 需要把rentable表中所有与sale重复的字段全部复制到new Sale中
+	 * 闇�瑕佹妸rentable琛ㄤ腑鎵�鏈変笌sale閲嶅鐨勫瓧娈靛叏閮ㄥ鍒跺埌new Sale涓�
 	 */
 	@Override
 	public boolean moveRentabletoSale(int bookid) {
@@ -109,7 +106,7 @@ public class RentableDaoImpl implements RentableDao{
 	public List<PartRentable> getPartRentables(int startlocation, int size) {
 		String hql = "select new PartRentable(u.id,t.picture,u.way,u.rent_price,u.sale_price,t.title) "
 				+ "FROM Rentable u,Isbn t WHERE u.information = t.isbn and u.way>0 order by u.start_time";
-		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
+		// 鏍规嵁闇�瑕佹樉绀虹殑淇℃伅涓嶅悓  灏�*鏇挎崲鎴愪笉鍚屽睘鎬э紝杩樻槸灏佽鎴愪竴涓被CommonInfo
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setMaxResults(size);
 		query.setFirstResult(startlocation);
@@ -118,7 +115,7 @@ public class RentableDaoImpl implements RentableDao{
 	@Override
 	public Rentable getOneRentable(int id) {
 		String hql = "FROM Rentable u Where u.id=? ";
-		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
+		// 鏍规嵁闇�瑕佹樉绀虹殑淇℃伅涓嶅悓  灏�*鏇挎崲鎴愪笉鍚屽睘鎬э紝杩樻槸灏佽鎴愪竴涓被CommonInfo
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setInteger(0, id);
 		return (Rentable) query.uniqueResult();
@@ -158,7 +155,7 @@ public class RentableDaoImpl implements RentableDao{
 	public List<Rentable> getRentableWayBelowZero(String userid) {
 		// TODO Auto-generated method stub
 		String hql = "FROM Rentable WHERE way<0";
-		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
+		// 鏍规嵁闇�瑕佹樉绀虹殑淇℃伅涓嶅悓  灏�*鏇挎崲鎴愪笉鍚屽睘鎬э紝杩樻槸灏佽鎴愪竴涓被CommonInfo
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		return query.list();
 	}
@@ -224,7 +221,7 @@ public class RentableDaoImpl implements RentableDao{
 	public Rentablestop getOneRentableStop(int bookid) {
 		// TODO Auto-generated method stub
 		String hql = "FROM Rentablestop u Where u.id=? ";
-		// 根据需要显示的信息不同  将*替换成不同属性，还是封装成一个类CommonInfo
+		// 鏍规嵁闇�瑕佹樉绀虹殑淇℃伅涓嶅悓  灏�*鏇挎崲鎴愪笉鍚屽睘鎬э紝杩樻槸灏佽鎴愪竴涓被CommonInfo
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setInteger(0, bookid);
 		return (Rentablestop)query.uniqueResult();
