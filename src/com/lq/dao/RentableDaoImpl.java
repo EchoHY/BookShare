@@ -105,7 +105,7 @@ public class RentableDaoImpl implements RentableDao{
 	@Override
 	public List<PartRentable> getPartRentables(int startlocation, int size) {
 		String hql = "select new PartRentable(u.id,t.picture,u.way,u.rent_price,u.sale_price,t.title) "
-				+ "FROM Rentable u,Isbn t WHERE u.information = t.isbn and u.way>0 order by u.start_time";
+				+ "FROM Rentable u,Isbn t WHERE u.information = t.isbn and u.way>0 order by u.start_time desc";
 		// 鏍规嵁闇�瑕佹樉绀虹殑淇℃伅涓嶅悓  灏�*鏇挎崲鎴愪笉鍚屽睘鎬э紝杩樻槸灏佽鎴愪竴涓被CommonInfo
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setMaxResults(size);

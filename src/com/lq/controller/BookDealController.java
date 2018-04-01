@@ -91,7 +91,7 @@ public class BookDealController{
 						TradeLog tradeLog  = new TradeLog(begin_time,period,now_way,bookOwner.getUserid(),userid,monney); 
 						userService.addlogandformer(tradeLog,rentable.getOrigin_openid(),bookid);
 						userService.updateBookOwner(userid,bookid,tradeLog.getId());
-						data = "{\"result\":dealsuccess }";	
+						data = "{\"result\":dealsuccess,\"phone\":"+userService.getOneUserInfo(rentable.getOrigin_openid()).getPhone()+"}";	
 					}
 				}
 			}

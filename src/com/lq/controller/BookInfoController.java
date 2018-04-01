@@ -66,7 +66,8 @@ public class BookInfoController{
 	    	String data = "{\"result\":\"fail\"}";	
 	    	if(keyword != ""){
 	    		List<PartRentable> rentables = isbnService.getSearchInCore(keyword);
-	    		data = "{\"result\":"+ JSON.toJSONString(rentables) +"}";
+	    		Long len = (long) rentables.size();
+	    		data = "{\"result\":"+ JSON.toJSONString(rentables) +",\"len\":"+len+"}";
 	    	}	
 	    	response.setContentType("application/json");	
 			try{
